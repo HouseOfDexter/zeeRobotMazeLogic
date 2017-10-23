@@ -51,16 +51,16 @@ bool zeeRobotMazeLogic::IsFinished()
   return false;
 }
 
-void zeeRobotMazeLogic::Move()
+void zeeRobotMazeLogic::Execute()
 {
   //right forward sensor
-  long distanceRF = _sr04->GetDistanceMm(trigRFPin);
+  long distanceRF = _sr04->GetDistanceMm(cTrigRFPin);
   //right rear sensor
-  long distanceRR = _sr04->GetDistanceMm(trigRRPin);
+  long distanceRR = _sr04->GetDistanceMm(cTrigRRPin);
   long differenceBetweenRightSensors = _sr04->DiffInMM(distanceRF, distanceRR);
   bool isEqual = _sr04->IsEqual(differenceBetweenRightSensors);
   //forward sensor
-  long forwardSensor = _sr04->GetSingleDistanceMm(trigForwardPin);
+  long forwardSensor = _sr04->GetSingleDistanceMm(cTrigForwardPin);
   bool obstacleForward = ObstacleForward(forwardSensor);
 
   bool detectLine = _lineReader->DetectLine();

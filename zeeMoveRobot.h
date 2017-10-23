@@ -8,8 +8,9 @@
 
 #include "zeeOnOffLED.h"
 #include "zeeDetection.h"
+#include "zeeExecute.h"
 
-class zeeMoveRobot
+class zeeMoveRobot : zeeExecute
 {
 public:
   const int defaultMoveTime = 250;
@@ -23,7 +24,7 @@ protected:
   zeeMoveRobot* GetRobot();
   void CallNextRobot(zeeDetection* detection, bool isFinished);
   //abstract method that will be implemented by State Class
-  virtual void Move();
+  virtual void Execute();
   unsigned int GetMoveTime();
 private:
   unsigned int _moveTime = defaultMoveTime;
@@ -34,7 +35,7 @@ class zeeTurnRight : public zeeMoveRobot
 {
 public:
   zeeTurnRight(int moveTime, zeeMoveRobot* robot);
-  void Move();
+  void Execute();
 protected:
   virtual bool ShouldHandle(zeeDetection* detection, bool isFinished);
 };
@@ -43,7 +44,7 @@ class zeeTurnLeft : public zeeMoveRobot
 {
 public:
   zeeTurnLeft(int moveTime, zeeMoveRobot* robot);
-  void Move();
+  void Execute();
 protected:
   virtual bool ShouldHandle(zeeDetection* detection, bool isFinished);
 };
@@ -52,7 +53,7 @@ class zeeSmallTurnLeft : public zeeMoveRobot
 {
 public:
   zeeSmallTurnLeft(int moveTime, zeeMoveRobot* robot);
-  void Move();
+  void Execute();
 protected:
   virtual bool ShouldHandle(zeeDetection* detection, bool isFinished);
 };
@@ -61,7 +62,7 @@ class zeeGoStraight : public zeeMoveRobot
 {
 public:
   zeeGoStraight(int moveTime, zeeMoveRobot* robot);
-  void Move();
+  void Execute();
 protected:
   virtual bool ShouldHandle(zeeDetection* detection, bool isFinished);
 };
@@ -70,7 +71,7 @@ class zeeStop : public zeeMoveRobot
 {
 public:
   zeeStop(int moveTime, zeeMoveRobot* robot);
-  void Move();
+  void Execute();
 protected:
   virtual bool ShouldHandle(zeeDetection* detection, bool isFinished);
 };
@@ -79,7 +80,7 @@ class zeeFinished : public zeeMoveRobot
 {
 public:
   zeeFinished(int moveTime, zeeMoveRobot* robot);
-  void Move();
+  void Execute();
 protected:
   virtual bool ShouldHandle(zeeDetection* detection, bool isFinished);
 };

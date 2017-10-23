@@ -81,6 +81,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="zeeDetection.h" />
+    <ClInclude Include="zeeExecute.h" />
     <ClInclude Include="zeeHC_SR04.h" />
     <ClInclude Include="zeeLineReader.h" />
     <ClInclude Include="zeeRobotMazeLogic.h" />
@@ -91,6 +92,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="zeeDetection.cpp" />
+    <ClCompile Include="zeeExecute.cpp" />
     <ClCompile Include="zeeHC_SR04.cpp" />
     <ClCompile Include="zeeLineReader.cpp" />
     <ClCompile Include="zeeRobotMazeLogic.cpp" />

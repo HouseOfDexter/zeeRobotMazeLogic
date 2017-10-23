@@ -14,7 +14,7 @@ public:
   static zeeMoveRobot* SetMoveRobots(zeeMoveRobot* zeeMoveRobot, int moveTime);
 
   bool IsFinished();
-  void Move();
+  void Execute();
 private:
   zeeHC_SR04_Sensor* _sr04;
   zeeMoveRobot* _moveRobot;

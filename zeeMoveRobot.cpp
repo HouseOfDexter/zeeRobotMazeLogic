@@ -1,5 +1,6 @@
 #include "zeeMoveRobot.h"
 //#include "zeeOnOffLED.h"
+
 /*This is a Abstract State Class, it knows how to do it's one function and only that*/
 
 zeeMoveRobot::zeeMoveRobot(unsigned int moveTime, zeeMoveRobot* robot)
@@ -19,7 +20,7 @@ bool zeeMoveRobot::Handle(zeeDetection * detection, bool isFinished)
   bool handled = false;
   if (ShouldHandle(detection, isFinished))
   {
-    Move();
+    Execute();
     handled = true;
   }
   CallNextRobot(detection, isFinished);
@@ -27,7 +28,7 @@ bool zeeMoveRobot::Handle(zeeDetection * detection, bool isFinished)
   return handled;
 }
 
-void zeeMoveRobot::Move()
+void zeeMoveRobot::Execute()
 {
   Serial.println("Default Move");
 }
@@ -49,6 +50,8 @@ void zeeMoveRobot::CallNextRobot(zeeDetection* detection, bool isFinished)
   if (nextRobot != NULL)
     nextRobot->Handle(detection, isFinished);
 }
+
+/************************************************************************************/
 
 zeeDecoratorLed::zeeDecoratorLed(int moveTime, zeeMoveRobot* decorator, zeeOnOffLED *onOffLed)
   : zeeMoveRobot(moveTime, decorator)
@@ -93,12 +96,14 @@ bool zeeDecoratorLed::ShouldHandle(zeeDetection * detection, bool isFinished)
   return true;
 }
 
+/************************************************************************************/
+
 zeeTurnRight::zeeTurnRight(int moveTime, zeeMoveRobot * decorator)
   : zeeMoveRobot(moveTime, decorator)
 {
 }
 
-void zeeTurnRight::Move()
+void zeeTurnRight::Execute()
 {
   Serial.println("zeeTurnRight Move");
   //temp mock moving
@@ -111,12 +116,14 @@ bool zeeTurnRight::ShouldHandle(zeeDetection * detection, bool isFinished)
     detection->GetDiffBetweenRightSensors() > 0;
 }
 
+/************************************************************************************/
+
 zeeTurnLeft::zeeTurnLeft(int moveTime, zeeMoveRobot * decorator)
   : zeeMoveRobot(moveTime, decorator)
 {
 }
 
-void zeeTurnLeft::Move()
+void zeeTurnLeft::Execute()
 {
   Serial.println("zeeTurnLeft Move");
   //temp mock moving
@@ -130,11 +137,13 @@ bool zeeTurnLeft::ShouldHandle(zeeDetection * detection, bool isFinished)
     detection->GetDiffBetweenRightSensors() < 0);
 }
 
+/************************************************************************************/
+
 zeeGoStraight::zeeGoStraight(int moveTime, zeeMoveRobot * decorator)
   :zeeMoveRobot(moveTime, decorator)
 {};
 
-void zeeGoStraight::Move()
+void zeeGoStraight::Execute()
 {
   Serial.println("zeeGoStraight Move");
   //temp mock moving
@@ -147,12 +156,14 @@ bool zeeGoStraight::ShouldHandle(zeeDetection * detection, bool isFinished)
     !detection->GetObstacleForward());
 }
 
+/************************************************************************************/
+
 zeeStop::zeeStop(int moveTime, zeeMoveRobot * decorator)
   : zeeMoveRobot(moveTime, decorator)
 {
 }
 
-void zeeStop::Move()
+void zeeStop::Execute()
 {
   Serial.println("zeeStop Move");
   delayMicroseconds(GetMoveTime());
@@ -163,12 +174,14 @@ bool zeeStop::ShouldHandle(zeeDetection * detection, bool isFinished)
   return !isFinished && detection->GetObstacleForward();
 }
 
+/************************************************************************************/
+
 zeeFinished::zeeFinished(int moveTime, zeeMoveRobot * robot)
   : zeeMoveRobot(moveTime, robot)
 {
 }
 
-void zeeFinished::Move()
+void zeeFinished::Execute()
 {
   Serial.println("zeeFinished Move");
   delayMicroseconds(GetMoveTime());
@@ -179,12 +192,14 @@ bool zeeFinished::ShouldHandle(zeeDetection * detection, bool isFinished)
   return isFinished;
 }
 
+/************************************************************************************/
+
 zeeSmallTurnLeft::zeeSmallTurnLeft(int moveTime, zeeMoveRobot * robot)
   : zeeMoveRobot(moveTime, robot)
 {
 }
 
-void zeeSmallTurnLeft::Move()
+void zeeSmallTurnLeft::Execute()
 {
   Serial.println("zeeSmallTurnLeft Move");
   //temp mock moving
@@ -196,6 +211,8 @@ bool zeeSmallTurnLeft::ShouldHandle(zeeDetection * detection, bool isFinished)
   return (!isFinished && !detection->GetIsEqual() &&
     detection->GetDiffBetweenRightSensors() < 0);
 }
+
+/************************************************************************************/
 
 zeeDecoratorPrintLn::zeeDecoratorPrintLn(int moveTime, zeeMoveRobot* robot)
   : zeeMoveRobot(moveTime, robot)

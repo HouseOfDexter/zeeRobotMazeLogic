@@ -7,6 +7,8 @@
 #include "WProgram.h"
 #endif
 
+#include "zeeSensorPins.h"
+
 class zeeHC_SR04_Sensor
 {
 public:
@@ -19,8 +21,8 @@ public:
   long GetDistanceMm(int trigPin);
   long GetSingleDistanceMm(int trigPin);
 private:
-  int _measureSamples = 10; //how many samples to read and take average of the readings
-  int _measureSampleDelay = 5; //in ms
-  int _sonicSlop = 7; //in mm, our sensor is not extremely accurate, we use slop to be acceptable values that are equal.
+  int _measureSamples = cMeasureSamples; //how many samples to read and take average of the readings
+  int _measureSampleDelay = cSampleMeasurementDelay; //in ms
+  int _sonicSlop = cSonicSlop; //in mm, our sensor is not extremely accurate, we use slop to be acceptable values that are equal.
 };
 #endif

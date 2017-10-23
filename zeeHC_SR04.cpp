@@ -19,7 +19,7 @@ zeeHC_SR04_Sensor::~zeeHC_SR04_Sensor()
 bool zeeHC_SR04_Sensor::IsEqual(long diff)
 {
   bool isEqual;
-
+  /*Need to move this to a decorator class*/
   Serial.println("Difference: ");
   Serial.print(diff);
   Serial.println(" mm");
@@ -36,6 +36,7 @@ bool zeeHC_SR04_Sensor::IsEqual(long diff)
 
 long zeeHC_SR04_Sensor::DiffInMM(long distanceRf, long distanceRr)
 {
+  /*Need to move this to a decorator class*/
   Serial.println("DistanceRF: ");
   Serial.print(distanceRf);
   Serial.println(" mm");

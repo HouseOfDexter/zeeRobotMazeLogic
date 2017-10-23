@@ -1,7 +1,7 @@
 #include "zeeHC_SR04.h"
 
 //constant that is speed of sound divided by half
-const long _uso = 58.0;
+const long cUSo = 58.0;
 
 zeeHC_SR04_Sensor::zeeHC_SR04_Sensor(int measureSamples, int measureSampleDelay, int sonicSlop)
   :_measureSamples(measureSamples), _measureSampleDelay(measureSampleDelay), _sonicSlop(sonicSlop)
@@ -71,6 +71,6 @@ long zeeHC_SR04_Sensor::GetSingleDistanceMm(int trigPin)
   digitalWrite(trigPin, LOW);
   //we then read the echo of the US_Pulse...note this is returned in MicroSeconds
   duration = pulseIn(echoPin, HIGH);
-  distance = (long)(((float)duration / _uso) * 10.0);
+  distance = (long)(((float)duration / cUSo) * 10.0);
   return distance;
 }

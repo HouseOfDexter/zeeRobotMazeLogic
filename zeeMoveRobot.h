@@ -23,7 +23,6 @@ protected:
   virtual bool ShouldHandle(zeeDetection* detection, bool isFinished) = 0;
   zeeMoveRobot* GetRobot();
   void CallNextRobot(zeeDetection* detection, bool isFinished);
-  //abstract method that will be implemented by State Class
   virtual void Execute();
   unsigned int GetMoveTime();
 private:
@@ -31,6 +30,7 @@ private:
   zeeMoveRobot* _robot;
 };
 
+/************************************************************************************/
 class zeeTurnRight : public zeeMoveRobot
 {
 public:
@@ -39,6 +39,8 @@ public:
 protected:
   virtual bool ShouldHandle(zeeDetection* detection, bool isFinished);
 };
+
+/************************************************************************************/
 
 class zeeTurnLeft : public zeeMoveRobot
 {
@@ -49,6 +51,7 @@ protected:
   virtual bool ShouldHandle(zeeDetection* detection, bool isFinished);
 };
 
+/************************************************************************************/
 class zeeSmallTurnLeft : public zeeMoveRobot
 {
 public:
@@ -58,6 +61,7 @@ protected:
   virtual bool ShouldHandle(zeeDetection* detection, bool isFinished);
 };
 
+/************************************************************************************/
 class zeeGoStraight : public zeeMoveRobot
 {
 public:
@@ -67,6 +71,7 @@ protected:
   virtual bool ShouldHandle(zeeDetection* detection, bool isFinished);
 };
 
+/************************************************************************************/
 class zeeStop : public zeeMoveRobot
 {
 public:
@@ -76,6 +81,7 @@ protected:
   virtual bool ShouldHandle(zeeDetection* detection, bool isFinished);
 };
 
+/************************************************************************************/
 class zeeFinished : public zeeMoveRobot
 {
 public:
@@ -85,6 +91,7 @@ protected:
   virtual bool ShouldHandle(zeeDetection* detection, bool isFinished);
 };
 
+/************************************************************************************/
 class zeeDecoratorLed : public zeeMoveRobot
 {
   /*
@@ -103,6 +110,7 @@ private:
   void SetLeds(bool setOn);
 };
 
+/************************************************************************************/
 class zeeDecoratorPrintLn : public zeeMoveRobot
 {
 public:

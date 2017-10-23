@@ -4,8 +4,9 @@
 #include "zeeHC_SR04.h"
 #include "zeeMoveRobot.h"
 #include "zeeLineReader.h"
+#include "zeeExecute.h"
 
-class zeeRobotMazeLogic
+class zeeRobotMazeLogic : zeeExecute
 {
 public:
   zeeRobotMazeLogic(zeeHC_SR04_Sensor* sr04, zeeMoveRobot* moveRobot, zeeLineReader* lineReader, long distanceForwardDetectionMm);

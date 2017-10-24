@@ -76,4 +76,6 @@ void loop()
   delete dcMotorFR;
   delete dcMotorRL;
   delete dcMotorRR;
+
+  delete motors;
 }

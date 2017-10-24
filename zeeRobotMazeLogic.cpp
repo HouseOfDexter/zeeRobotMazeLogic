@@ -15,15 +15,17 @@ zeeRobotMazeLogic::~zeeRobotMazeLogic()
 {
 }
 
-zeeMoveRobot* zeeRobotMazeLogic::SetMoveRobots(zeeMoveRobot* zeeMoveRobot, int moveTime)
+zeeMoveRobot* zeeRobotMazeLogic::SetMoveRobots(zeeMoveRobot* zeeMoveRobot, zeeMotors* motors, int moveTime)
 {
   //zeeDecoratorTestLed *ledDecorator = new zeeDecoratorTestLed(moveTime, NULL, onOffLed);
-  zeeFinished* finished = new zeeFinished(moveTime, zeeMoveRobot);
-  zeeStop* stop = new zeeStop(cBreakTime, finished);
-  zeeTurnLeft* turnLeft = new zeeTurnLeft(moveTime, stop);
-  zeeTurnRight* turnRight = new zeeTurnRight(moveTime, turnLeft);
-  zeeGoStraight* straight = new zeeGoStraight(moveTime, turnRight);
-  zeeSmallTurnLeft* smallTurnLeft = new zeeSmallTurnLeft(cSmallTurnTime, straight);
+  zeeFinished* finished = new zeeFinished(moveTime, zeeMoveRobot, motors);
+  zeeStop* stop = new zeeStop(cBreakTime, finished, motors);
+  //A turn Left will make up two parts, a turnLeft and smallTurnLeft.
+  zeeTurnLeft* turnLeft = new zeeTurnLeft(moveTime - cSmallTurnTime, stop, motors);
+  zeeTurnRight* turnRight = new zeeTurnRight(moveTime - cSmallTurnTime, turnLeft, motors);
+  zeeGoStraight* straight = new zeeGoStraight(moveTime, turnRight, motors);
+  zeeSmallTurnLeft* smallTurnLeft = new zeeSmallTurnLeft(cSmallTurnTime, straight, motors);
+  zeeSmallTurnRight* smallTurnRight = new zeeSmallTurnRight(cSmallTurnTime, smallTurnLeft, motors);
   /*we return the last moverobot in our chain...as this will need to be freed(delete).  This will cause
   a cascade of deletes through the destructor.  If you add to this chain, make sure the last in the chain is
   returned and then delete called when it needs to be cleaned up.

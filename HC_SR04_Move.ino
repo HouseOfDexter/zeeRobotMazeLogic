@@ -1,3 +1,6 @@
+#include "zeeMotorPins.h"
+#include <Adafruit_MotorShield.h>
+
 /*
 
 */
@@ -7,6 +10,8 @@
 #include "zeeRobotMazeLogic.h"
 #include "zeeLineReader.h"
 #include "zeeSensorPins.h"
+#include "zeeMotorPins.h"
+#include "zeeDCMotor.h"
 
 //default times in MS
 const unsigned int cDelay = 250;
@@ -34,8 +39,22 @@ void loop()
   //we don't need to clean up the decorators as they will be cleaned up in the destructor of zeeMoveRobot as one of the chained Robots
   zeeDecoratorLed* ledDecorator = new zeeDecoratorLed(cMoveTime, NULL, onOffLed);
   zeeDecoratorPrintLn* printDecorator = new zeeDecoratorPrintLn(cMoveTime, ledDecorator);
-  zeeMoveRobot* moveRobot = zeeRobotMazeLogic::SetMoveRobots(printDecorator, cMoveTime);
-  zeeRobotMazeLogic *mazeLogic = new zeeRobotMazeLogic(sr04, moveRobot, lineReader, cDistanceForwardDetection);
+
+  Adafruit_MotorShield motorShield = Adafruit_MotorShield(0x61);
+
+  Adafruit_DCMotor* _dcMotorFL = motorShield.getMotor(cMotorFL);
+  Adafruit_DCMotor* _dcMotorFR = motorShield.getMotor(cMotorFR);
+  Adafruit_DCMotor* _dcMotorRL = motorShield.getMotor(cMotorRL);
+  Adafruit_DCMotor* _dcMotorRR = motorShield.getMotor(cMotorRR);
+
+  zeeAdafruitDCMotor* dcMotorFL = new zeeAdafruitDCMotor(cMotorPinFL, _dcMotorFL);
+  zeeAdafruitDCMotor* dcMotorFR = new zeeAdafruitDCMotor(cMotorPinFR, _dcMotorFR);
+  zeeAdafruitDCMotor* dcMotorRL = new zeeAdafruitDCMotor(cMotorPinRL, _dcMotorRL);
+  zeeAdafruitDCMotor* dcMotorRR = new zeeAdafruitDCMotor(cMotorPinRR, _dcMotorRR);
+
+  zeeMotors* motors = new zeeMotors(dcMotorFL, dcMotorFR, dcMotorRL, dcMotorRR);
+  zeeMoveRobot* moveRobot = zeeRobotMazeLogic::SetMoveRobots(printDecorator, motors, cMoveTime);
+  zeeRobotMazeLogic* mazeLogic = new zeeRobotMazeLogic(sr04, moveRobot, lineReader, cDistanceForwardDetection);
 
   while (!mazeLogic->IsFinished())
   {
@@ -47,4 +66,14 @@ void loop()
   delete moveRobot;
   delete mazeLogic;
   delete lineReader;
+
+  delete _dcMotorFL;
+  delete _dcMotorFR;
+  delete _dcMotorRL;
+  delete _dcMotorRR;
+
+  delete dcMotorFL;
+  delete dcMotorFR;
+  delete dcMotorRL;
+  delete dcMotorRR;
 }

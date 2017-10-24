@@ -12,7 +12,7 @@ public:
   zeeRobotMazeLogic(zeeHC_SR04_Sensor* sr04, zeeMoveRobot* moveRobot, zeeLineReader* lineReader, long distanceForwardDetectionMm);
   ~zeeRobotMazeLogic();
 
-  static zeeMoveRobot* SetMoveRobots(zeeMoveRobot* zeeMoveRobot, int moveTime);
+  static zeeMoveRobot* SetMoveRobots(zeeMoveRobot* zeeMoveRobot, zeeMotors* motors, int moveTime);
 
   bool IsFinished();
   void Execute();

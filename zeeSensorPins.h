@@ -13,21 +13,22 @@ The pins should line up with how you have your pins installed on the board.
 
 const unsigned int baseUS = 8;
 
-//forward sensor  echo pin needs to +1 of trigger pin
-const unsigned int cEchoForwardPin = baseUS + 5;
-const unsigned int  cTrigForwardPin = baseUS + 4;
+//forward sensor  trigger pin needs to +1 of echo pin
+const unsigned int  cTrigForwardPin = baseUS + 5;
+const unsigned int cEchoForwardPin = baseUS + 4;
 
-//right forward sensor echo pin needs to +1 of trigger pin
-const unsigned int cEchoRFPin = baseUS + 3;
-const unsigned int cTrigRFPin = baseUS + 2;
+//right forward sensor trigger pin needs to +1 of echo pin
+const unsigned int cTrigRFPin = baseUS + 3;
+const unsigned int cEchoRFPin = baseUS + 2;
 
-//right rear sensor echo pin needs to +1 of trigger pin
-const unsigned int cEchoRRPin = baseUS + 1;
-const unsigned int cTrigRRPin = baseUS + 0;
+//right rear sensor trigger pin needs to +1 of echo pin
+const unsigned int cTrigRRPin = baseUS + 1;
+const unsigned int cEchoRRPin = baseUS + 0;
 
 //LEDs to give us feedback
 const unsigned int cLedPin1 = 3;
 const unsigned int cLedPin2 = 2;
+const unsigned int cLedPin3 = 1;
 
 const unsigned int cSonicSlop = 7;
 const unsigned int cMeasureSamples = 10;

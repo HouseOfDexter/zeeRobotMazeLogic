@@ -1,7 +1,5 @@
-// zeeMotorPins.h
-
-#ifndef _ZEEMOTORPINS_h
-#define _ZEEMOTORPINS_h
+#ifndef zeeMotorPins_h
+#define zeeMotorPins_h
 
 #if defined(ARDUINO) && ARDUINO >= 100
 #include "Arduino.h"

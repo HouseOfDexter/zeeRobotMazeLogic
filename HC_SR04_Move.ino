@@ -12,6 +12,8 @@
 #include "zeeSensorPins.h"
 #include "zeeMotorPins.h"
 #include "zeeDCMotor.h"
+#include "zeeAdafruitDCMotor.h"
+#include "zeeElegooDCMotor.h"
 
 //default times in MS
 const unsigned int cDelay = 250;
@@ -43,14 +45,26 @@ void loop()
   Adafruit_MotorShield motorShield = Adafruit_MotorShield(0x61);
 
   Adafruit_DCMotor* _dcMotorFL = motorShield.getMotor(cMotorFL);
-  Adafruit_DCMotor* _dcMotorFR = motorShield.getMotor(cMotorFR);
-  Adafruit_DCMotor* _dcMotorRL = motorShield.getMotor(cMotorRL);
-  Adafruit_DCMotor* _dcMotorRR = motorShield.getMotor(cMotorRR);
+  //Adafruit_DCMotor* _dcMotorFR = motorShield.getMotor(cMotorFR);
+  //Adafruit_DCMotor* _dcMotorRL = motorShield.getMotor(cMotorRL);
+  //Adafruit_DCMotor* _dcMotorRR = motorShield.getMotor(cMotorRR);
 
-  zeeAdafruitDCMotor* dcMotorFL = new zeeAdafruitDCMotor(cMotorPinFL, _dcMotorFL);
-  zeeAdafruitDCMotor* dcMotorFR = new zeeAdafruitDCMotor(cMotorPinFR, _dcMotorFR);
-  zeeAdafruitDCMotor* dcMotorRL = new zeeAdafruitDCMotor(cMotorPinRL, _dcMotorRL);
-  zeeAdafruitDCMotor* dcMotorRR = new zeeAdafruitDCMotor(cMotorPinRR, _dcMotorRR);
+  //zeeAdafruitDCMotor* dcMotorFL = new zeeAdafruitDCMotor(cMotorPinFL, _dcMotorFL);
+  //zeeAdafruitDCMotor* dcMotorFR = new zeeAdafruitDCMotor(cMotorPinFR, _dcMotorFR);
+  //zeeAdafruitDCMotor* dcMotorRL = new zeeAdafruitDCMotor(cMotorPinRL, _dcMotorRL);
+  //zeeAdafruitDCMotor* dcMotorRR = new zeeAdafruitDCMotor(cMotorPinRR, _dcMotorRR);
+
+  Elegoo_MotorShield motorShield = Elegoo_MotorShield();
+
+  Elegoo_DCMotor* _dcMotorFL = motorShield.getMotor(cMotorFL);
+  Elegoo_DCMotor* _dcMotorFR = motorShield.getMotor(cMotorFR);
+  Elegoo_DCMotor* _dcMotorRL = motorShield.getMotor(cMotorRL);
+  Elegoo_DCMotor* _dcMotorRR = motorShield.getMotor(cMotorRR);
+
+  zeeElegooDCMotor* dcMotorFL = new zeeElegooDCMotor(cMotorPinFL, _dcMotorFL);
+  zeeElegooDCMotor* dcMotorFR = new zeeElegooDCMotor(cMotorPinFR, _dcMotorFR);
+  zeeElegooDCMotor* dcMotorRL = new zeeElegooDCMotor(cMotorPinRL, _dcMotorRL);
+  zeeElegooDCMotor* dcMotorRR = new zeeElegooDCMotor(cMotorPinRR, _dcMotorRR);
 
   zeeMotors* motors = new zeeMotors(dcMotorFL, dcMotorFR, dcMotorRL, dcMotorRR);
   zeeMoveRobot* moveRobot = zeeRobotMazeLogic::SetMoveRobots(printDecorator, motors, cMoveTime);

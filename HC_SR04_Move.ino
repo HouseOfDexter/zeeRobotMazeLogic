@@ -42,9 +42,9 @@ void loop()
   zeeDecoratorLed* ledDecorator = new zeeDecoratorLed(cMoveTime, NULL, onOffLed);
   zeeDecoratorPrintLn* printDecorator = new zeeDecoratorPrintLn(cMoveTime, ledDecorator);
 
-  Adafruit_MotorShield motorShield = Adafruit_MotorShield(0x61);
+  //Adafruit_MotorShield motorShield = Adafruit_MotorShield(0x61);
 
-  Adafruit_DCMotor* _dcMotorFL = motorShield.getMotor(cMotorFL);
+  //Adafruit_DCMotor* _dcMotorFL = motorShield.getMotor(cMotorFL);
   //Adafruit_DCMotor* _dcMotorFR = motorShield.getMotor(cMotorFR);
   //Adafruit_DCMotor* _dcMotorRL = motorShield.getMotor(cMotorRL);
   //Adafruit_DCMotor* _dcMotorRR = motorShield.getMotor(cMotorRR);

@@ -12,12 +12,14 @@
 #include "zeeSensorPins.h"
 #include "zeeMotorPins.h"
 #include "zeeDCMotor.h"
-#include "zeeAdafruitDCMotor.h"
+//#include "zeeAdafruitDCMotor.h"
 #include "zeeElegooDCMotor.h"
 
 //default times in MS
 const unsigned int cDelay = 250;
 const unsigned int cMoveTime = 100;
+
+//distance in millimeters
 const unsigned int cDistanceForwardDetection = 50;
 
 void setup() {

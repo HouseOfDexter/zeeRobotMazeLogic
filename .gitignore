@@ -1,4 +1,3 @@
-
 #ignore directories
 Properties/
 bin/
@@ -9,6 +8,7 @@ Debug/
 __vm/
 
 #ignore files
+
 *.filters
 *.orig
 *.bak

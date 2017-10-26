@@ -1,4 +1,12 @@
-#pragma once
+#ifndef zeeAdafruitDCMotor_h
+#define zeeAdafruitDCMotor_h
+#if ARDUINO >= 100
+#include "Arduino.h"
+#else
+#include "WProgram.h"
+#endif
+
+#include <Adafruit_MotorShield.h>
 #include "zeeDCMotor.h"
 /*We create a Fascade around Adafruit Library*/
 class zeeAdafruitDCMotor : public zeeDCMotor
@@ -13,3 +21,4 @@ private:
   int _speed;
   Adafruit_DCMotor * _dcMotor;
 };
+#endif

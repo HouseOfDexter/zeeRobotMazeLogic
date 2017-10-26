@@ -5,8 +5,6 @@
 #else
 #include "WProgram.h"
 #endif
-
-#include <Adafruit_MotorShield.h>
 #include "zeeExecute.h"
 
 class zeeDCMotor : public zeeExecute

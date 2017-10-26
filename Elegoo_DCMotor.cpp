@@ -12,7 +12,7 @@ Elegoo_DCMotor *Elegoo_MotorShield::getMotor(unsigned int motor)
 {
   if (motor > 4)
     return NULL;
-  if (_dcMotors[motor].Id == 0)
+  if (_dcMotors[motor].Id() == 0)
   {
     _dcMotors[motor].SetId(motor);
     //Set Reserved Pins

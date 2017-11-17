@@ -6,26 +6,30 @@
 const int cSmallTurnTime = 50;
 const int cBreakTime = 100;
 
-zeeRobotMazeLogic::zeeRobotMazeLogic(zeeHC_SR04_Sensor* sr04, zeeMoveRobot* moveRobot, zeeLineReader* lineReader, long distanceForwardDetectionMm)
-  :_sr04(sr04), _moveRobot(moveRobot), _lineReader(lineReader), _distanceForwardDetectionMm(distanceForwardDetectionMm)
+zeeRobotMazeLogic::zeeRobotMazeLogic(zeeArduino* arduino, unsigned long executeLength, zeeHC_SR04_Sensor* sr04, zeeMoveRobot* moveRobot, zeeLineReader* lineReader, long distanceForwardDetectionMm)
+  : zeeExecute(arduino, executeLength)
 {
+  _sr04 = sr04;
+  _moveRobot = moveRobot;
+  _lineReader = lineReader;
+  _distanceForwardDetectionMm = distanceForwardDetectionMm;
 }
 
 zeeRobotMazeLogic::~zeeRobotMazeLogic()
 {
 }
 
-zeeMoveRobot* zeeRobotMazeLogic::SetMoveRobots(zeeMoveRobot* zeeMoveRobot, zeeMotors* motors, int moveTime)
+zeeMoveRobot* zeeRobotMazeLogic::SetMoveRobots(zeeArduino* arduino, zeeMoveRobot* zeeMoveRobot, zeeMotors* motors, int moveTime)
 {
   //zeeDecoratorTestLed *ledDecorator = new zeeDecoratorTestLed(moveTime, NULL, onOffLed);
-  zeeFinished* finished = new zeeFinished(moveTime, zeeMoveRobot, motors);
-  zeeStop* stop = new zeeStop(cBreakTime, finished, motors);
+  zeeFinished* finished = new zeeFinished(arduino, moveTime, zeeMoveRobot, motors);
+  zeeStop* stop = new zeeStop(arduino, cBreakTime, finished, motors);
   //A turn Left will make up two parts, a turnLeft and smallTurnLeft.
-  zeeTurnLeft* turnLeft = new zeeTurnLeft(moveTime - cSmallTurnTime, stop, motors);
-  zeeTurnRight* turnRight = new zeeTurnRight(moveTime - cSmallTurnTime, turnLeft, motors);
-  zeeGoStraight* straight = new zeeGoStraight(moveTime, turnRight, motors);
-  zeeSmallTurnLeft* smallTurnLeft = new zeeSmallTurnLeft(cSmallTurnTime, straight, motors);
-  zeeSmallTurnRight* smallTurnRight = new zeeSmallTurnRight(cSmallTurnTime, smallTurnLeft, motors);
+  zeeTurnLeft* turnLeft = new zeeTurnLeft(arduino, moveTime - cSmallTurnTime, stop, motors);
+  zeeTurnRight* turnRight = new zeeTurnRight(arduino, moveTime - cSmallTurnTime, turnLeft, motors);
+  zeeGoStraight* straight = new zeeGoStraight(arduino, moveTime, turnRight, motors);
+  zeeSmallTurnLeft* smallTurnLeft = new zeeSmallTurnLeft(arduino, cSmallTurnTime, straight, motors);
+  zeeSmallTurnRight* smallTurnRight = new zeeSmallTurnRight(arduino, cSmallTurnTime, smallTurnLeft, motors);
   /*we return the last moverobot in our chain...as this will need to be freed(delete).  This will cause
   a cascade of deletes through the destructor.  If you add to this chain, make sure the last in the chain is
   returned and then delete called when it needs to be cleaned up.
@@ -53,12 +57,12 @@ bool zeeRobotMazeLogic::IsFinished()
   return false;
 }
 
-void zeeRobotMazeLogic::Execute()
+void zeeRobotMazeLogic::DoExecute()
 {
   //right forward sensor
   long distanceRF = _sr04->GetDistanceMm(cTrigRFPin);
   //right rear sensor
-  long distanceRR = _sr04->GetDistanceMm(cTrigRRPin);
+  long distanceRR = _sr04->GetDistanceMm(cTrigRRPin, 5);
   long differenceBetweenRightSensors = _sr04->DiffInMM(distanceRF, distanceRR);
   bool isEqual = _sr04->IsEqual(differenceBetweenRightSensors);
   //forward sensor

@@ -6,6 +6,7 @@
 #include "WProgram.h"
 #endif
 
+#include "zeeArduino.h"
 #include "zeeDCMotor.h"
 #include "Elegoo_DCMotor.h"
 
@@ -13,10 +14,11 @@ class zeeElegooDCMotor :
   public zeeDCMotor
 {
 public:
-  zeeElegooDCMotor::zeeElegooDCMotor(unsigned int pin, Elegoo_DCMotor * dcMotor);
-  ~zeeElegooDCMotor();
-  void Execute();
+  zeeElegooDCMotor(zeeArduino* arduino, unsigned long executeLength, unsigned int pin, Elegoo_DCMotor * dcMotor);
+  ~zeeElegooDCMotor();  
   void Setup(int speed);
+protected:
+  void DoExecute();
 private:
   unsigned int _pin;
   int _speed;

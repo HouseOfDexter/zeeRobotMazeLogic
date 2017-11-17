@@ -4,12 +4,13 @@ zeeElegooDCMotor::~zeeElegooDCMotor()
 {
 }
 
-zeeElegooDCMotor::zeeElegooDCMotor(unsigned int pin, Elegoo_DCMotor * dcMotor)
-  : _pin(pin), _dcMotor(dcMotor)
+zeeElegooDCMotor::zeeElegooDCMotor(zeeArduino* arduino, unsigned long executeLength, unsigned int pin, Elegoo_DCMotor * dcMotor)
+  : zeeDCMotor(arduino, executeLength, pin)
 {
+  _dcMotor = dcMotor;
 }
 
-void zeeElegooDCMotor::Execute()
+void zeeElegooDCMotor::DoExecute()
 {
 }
 

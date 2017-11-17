@@ -12,7 +12,7 @@
 class zeeAdafruitDCMotor : public zeeDCMotor
 {
 public:
-  zeeAdafruitDCMotor(unsigned int pin, Adafruit_DCMotor* dcMotor);
+  zeeAdafruitDCMotor(zeeArduino* arduino, unsigned long executeLength, unsigned int pin, Adafruit_DCMotor* dcMotor);
   ~zeeAdafruitDCMotor();
   void Execute();
   void Setup(int speed);

@@ -1,5 +1,6 @@
 #ifndef zeeOnOffLED_h
 #define zeeOnOffLED_h
+#include "zeeArduino.h"
 
 #if ARDUINO >= 100
 #include "Arduino.h"
@@ -10,9 +11,9 @@
 class zeeOnOffLED
 {
 public:
-  zeeOnOffLED();
-  zeeOnOffLED(int ledPin1, int ledPin2);
-  zeeOnOffLED(int ledPin1, int ledPin2, int ledPin3);
+  zeeOnOffLED();  
+  zeeOnOffLED(zeeArduino* arduino, int ledPin1, int ledPin2);
+  zeeOnOffLED(zeeArduino* arduino, int ledPin1, int ledPin2, int ledPin3);
   ~zeeOnOffLED();
 
   void Set2LEDs(bool isOn);
@@ -20,6 +21,7 @@ public:
   void Set3LEDs(int ledOn);
   void Set3LEDs(int ledOn, int ledPin1, int ledPin2, int ledPin3);
 private:
+  zeeArduino* _arduino;
   int _ledPin1;
   int _ledPin2;
   int _ledPin3;

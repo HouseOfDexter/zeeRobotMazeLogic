@@ -1,16 +1,15 @@
 #include "zeeDCMotor.h"
 
-zeeDCMotor::zeeDCMotor()
+zeeDCMotor::zeeDCMotor(zeeArduino* arduino, unsigned long executeLength, unsigned int pin)
+  :zeeExecute(arduino, executeLength)
 {
+  _pin = pin;
 }
 
 zeeDCMotor::~zeeDCMotor()
 {
 }
 
-zeeDCMotor::zeeDCMotor(unsigned int Pin)
-{
-}
 
 /************************************************************************************/
 zeeMotors::zeeMotors(zeeDCMotor * motorFL, zeeDCMotor * motorFR, zeeDCMotor * motorRL, zeeDCMotor * motorRR)

@@ -10,11 +10,12 @@
 class zeeDCMotor : public zeeExecute
 {
 public:
-  zeeDCMotor();
-  zeeDCMotor(unsigned int Pin);
+  zeeDCMotor(zeeArduino* arduino, unsigned long executeLength, unsigned int pin);
   ~zeeDCMotor();
 
   virtual void Setup(int speed) = 0;
+private:
+  unsigned int _pin;
 };
 
 /************************************************************************************/

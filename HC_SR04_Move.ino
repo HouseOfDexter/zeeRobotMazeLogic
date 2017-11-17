@@ -1,3 +1,4 @@
+#include "zeeArduino.h"
 #include "zeeMotorPins.h"
 #include <Adafruit_MotorShield.h>
 
@@ -17,7 +18,7 @@
 
 //default times in MS
 const unsigned int cDelay = 250;
-const unsigned int cMoveTime = 100;
+const unsigned long cMoveTime = 100;
 
 //distance in millimeters
 const unsigned int cDistanceForwardDetection = 50;
@@ -37,12 +38,14 @@ void setup() {
 void loop()
 {
   //we use dependecy injection so we know when to free our memory
-  zeeOnOffLED* onOffLed = new zeeOnOffLED(cLedPin1, cLedPin2);
-  zeeHC_SR04_Sensor* sr04 = new zeeHC_SR04_Sensor(cMeasureSamples, cSampleMeasurementDelay, cSonicSlop);
-  zeeLineReader* lineReader = new zeeLineReader();
+  zeeArduino* arduino = new zeeArduino(10);
+  zeeArduino* ledarduino = new zeeArduino(100);
+  zeeOnOffLED* onOffLed = new zeeOnOffLED(ledarduino, cLedPin1, cLedPin2);
+  zeeHC_SR04_Sensor* sr04 = new zeeHC_SR04_Sensor(arduino, cMeasureSamples, cSampleMeasurementDelay, cSonicSlop);
+  zeeLineReader* lineReader = new zeeLineReader(arduino, cMoveTime, cLineReaderPin);
   //we don't need to clean up the decorators as they will be cleaned up in the destructor of zeeMoveRobot as one of the chained Robots
-  zeeDecoratorLed* ledDecorator = new zeeDecoratorLed(cMoveTime, NULL, onOffLed);
-  zeeDecoratorPrintLn* printDecorator = new zeeDecoratorPrintLn(cMoveTime, ledDecorator);
+  zeeDecoratorLed* ledDecorator = new zeeDecoratorLed(ledarduino, cMoveTime, NULL, onOffLed);
+  zeeDecoratorPrintLn* printDecorator = new zeeDecoratorPrintLn(ledarduino, cMoveTime, ledDecorator);
 
   //Adafruit_MotorShield motorShield = Adafruit_MotorShield(0x61);
 
@@ -63,14 +66,14 @@ void loop()
   Elegoo_DCMotor* _dcMotorRL = motorShield.getMotor(cMotorRL);
   Elegoo_DCMotor* _dcMotorRR = motorShield.getMotor(cMotorRR);
 
-  zeeElegooDCMotor* dcMotorFL = new zeeElegooDCMotor(cMotorPinFL, _dcMotorFL);
-  zeeElegooDCMotor* dcMotorFR = new zeeElegooDCMotor(cMotorPinFR, _dcMotorFR);
-  zeeElegooDCMotor* dcMotorRL = new zeeElegooDCMotor(cMotorPinRL, _dcMotorRL);
-  zeeElegooDCMotor* dcMotorRR = new zeeElegooDCMotor(cMotorPinRR, _dcMotorRR);
+  zeeElegooDCMotor* dcMotorFL = new zeeElegooDCMotor(arduino, cMoveTime, cMotorPinFL, _dcMotorFL);
+  zeeElegooDCMotor* dcMotorFR = new zeeElegooDCMotor(arduino, cMoveTime, cMotorPinFR, _dcMotorFR);
+  zeeElegooDCMotor* dcMotorRL = new zeeElegooDCMotor(arduino, cMoveTime, cMotorPinRL, _dcMotorRL);
+  zeeElegooDCMotor* dcMotorRR = new zeeElegooDCMotor(arduino, cMoveTime, cMotorPinRR, _dcMotorRR);
 
   zeeMotors* motors = new zeeMotors(dcMotorFL, dcMotorFR, dcMotorRL, dcMotorRR);
-  zeeMoveRobot* moveRobot = zeeRobotMazeLogic::SetMoveRobots(printDecorator, motors, cMoveTime);
-  zeeRobotMazeLogic* mazeLogic = new zeeRobotMazeLogic(sr04, moveRobot, lineReader, cDistanceForwardDetection);
+  zeeMoveRobot* moveRobot = zeeRobotMazeLogic::SetMoveRobots(arduino, printDecorator, motors, cMoveTime);
+  zeeRobotMazeLogic* mazeLogic = new zeeRobotMazeLogic(arduino, cMoveTime, sr04, moveRobot, lineReader, cDistanceForwardDetection);
 
   while (!mazeLogic->IsFinished())
   {

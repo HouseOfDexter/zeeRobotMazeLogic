@@ -6,16 +6,17 @@
 #include "zeeLineReader.h"
 #include "zeeExecute.h"
 
-class zeeRobotMazeLogic : zeeExecute
+class zeeRobotMazeLogic : public zeeExecute
 {
 public:
-  zeeRobotMazeLogic(zeeHC_SR04_Sensor* sr04, zeeMoveRobot* moveRobot, zeeLineReader* lineReader, long distanceForwardDetectionMm);
+  zeeRobotMazeLogic(zeeArduino* arduino, unsigned long executeLength, zeeHC_SR04_Sensor* sr04, zeeMoveRobot* moveRobot, zeeLineReader* lineReader, long distanceForwardDetectionMm);
   ~zeeRobotMazeLogic();
 
-  static zeeMoveRobot* SetMoveRobots(zeeMoveRobot* zeeMoveRobot, zeeMotors* motors, int moveTime);
+  static zeeMoveRobot* SetMoveRobots(zeeArduino* arduino, zeeMoveRobot* zeeMoveRobot, zeeMotors* motors, int moveTime);
 
   bool IsFinished();
-  void Execute();
+protected:
+  void DoExecute();
 private:
   zeeHC_SR04_Sensor* _sr04;
   zeeMoveRobot* _moveRobot;

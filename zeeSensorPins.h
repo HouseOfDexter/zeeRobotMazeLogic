@@ -30,8 +30,13 @@ const unsigned int cLedPin1 = 3;
 const unsigned int cLedPin2 = 2;
 const unsigned int cLedPin3 = 1;
 
+//LineReader
+const unsigned int cLineReaderPin = 4;
+
 const unsigned int cSonicSlop = 7;
 const unsigned int cMeasureSamples = 10;
 const unsigned int cSampleMeasurementDelay = 5;
+
+
 
 #endif

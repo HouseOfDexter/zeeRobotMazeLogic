@@ -4,6 +4,7 @@
 
 class zeeArduino
 {
+/*This class is a fascade around Arduino.h, allowing us to unit test around the Sensors and Motors*/
 public:
   zeeArduino(unsigned long updateInterval);
   ~zeeArduino();
@@ -15,7 +16,7 @@ public:
 
   virtual void digitalWrite(uint8_t pin, uint8_t highlow);
 
-  unsigned long millis();
+  virtual unsigned long millis();
 
   unsigned long GetUpdateInterval() { return _updateInterval; }
 private:

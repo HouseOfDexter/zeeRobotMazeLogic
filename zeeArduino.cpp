@@ -1,7 +1,7 @@
 #include "zeeArduino.h"
 
-zeeArduino::zeeArduino(unsigned long updateInterval)
-  :_updateInterval(updateInterval)
+zeeArduino::zeeArduino(unsigned long updateInterval, unsigned long intervalRunTime)
+  :_updateInterval(updateInterval), _intervalRunTime(intervalRunTime)
 {
 }
 

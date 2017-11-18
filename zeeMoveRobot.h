@@ -18,12 +18,12 @@ public:
   zeeMoveRobot(zeeArduino* arduino, unsigned int moveTime, zeeMoveRobot* robot, zeeMotors* motors);
   ~zeeMoveRobot();
 
-  virtual bool Handle(zeeDetection* detection, bool isFinished);
+  virtual bool Handle(zeeDetection detection, bool isFinished);
 protected:
   //abstract method that will be implemented by State Class
-  virtual bool ShouldHandle(zeeDetection* detection, bool isFinished) = 0;
+  virtual bool ShouldHandle(zeeDetection detection, bool isFinished) = 0;
   zeeMoveRobot* GetRobot();
-  void CallNextRobot(zeeDetection* detection, bool isFinished);  
+  void CallNextRobot(zeeDetection detection, bool isFinished);  
   unsigned int GetMoveTime();
   zeeDCMotor* GetMotorFL();
   zeeDCMotor* GetMotorFR();
@@ -42,7 +42,7 @@ public:
   zeeTurnRight(zeeArduino* arduino, int moveTime, zeeMoveRobot* robot, zeeMotors* motors);
 protected:
   void DoExecute();
-  virtual bool ShouldHandle(zeeDetection* detection, bool isFinished);
+  bool ShouldHandle(zeeDetection detection, bool isFinished);
 };
 
 /************************************************************************************/
@@ -53,7 +53,7 @@ public:
   zeeTurnLeft(zeeArduino* arduino, int moveTime, zeeMoveRobot* robot, zeeMotors* motors);
 protected:
   void DoExecute();
-  virtual bool ShouldHandle(zeeDetection* detection, bool isFinished);
+  bool ShouldHandle(zeeDetection detection, bool isFinished);
 };
 
 /************************************************************************************/
@@ -63,7 +63,7 @@ public:
   zeeSmallTurnLeft(zeeArduino* arduino, int moveTime, zeeMoveRobot* robot, zeeMotors* motors);
 protected:
   void DoExecute();
-  virtual bool ShouldHandle(zeeDetection* detection, bool isFinished);
+  bool ShouldHandle(zeeDetection detection, bool isFinished);
 };
 
 /************************************************************************************/
@@ -73,7 +73,7 @@ public:
   zeeSmallTurnRight(zeeArduino* arduino, int moveTime, zeeMoveRobot* robot, zeeMotors* motors);
 protected:
   void DoExecute();
-  virtual bool ShouldHandle(zeeDetection* detection, bool isFinished);
+  bool ShouldHandle(zeeDetection detection, bool isFinished);
 };
 
 /************************************************************************************/
@@ -83,7 +83,7 @@ public:
   zeeGoStraight(zeeArduino* arduino, int moveTime, zeeMoveRobot* robot, zeeMotors* motors);
 protected:
   void DoExecute();
-  virtual bool ShouldHandle(zeeDetection* detection, bool isFinished);
+  bool ShouldHandle(zeeDetection detection, bool isFinished);
 };
 
 /************************************************************************************/
@@ -93,7 +93,7 @@ public:
   zeeStop(zeeArduino* arduino, int moveTime, zeeMoveRobot* robot, zeeMotors* motors);
 protected:
   void DoExecute();
-  virtual bool ShouldHandle(zeeDetection* detection, bool isFinished);
+  bool ShouldHandle(zeeDetection detection, bool isFinished);
 };
 
 /************************************************************************************/
@@ -103,7 +103,7 @@ public:
   zeeFinished(zeeArduino* arduino, int moveTime, zeeMoveRobot* robot, zeeMotors* motors);
 protected:
   void DoExecute();
-  virtual bool ShouldHandle(zeeDetection* detection, bool isFinished);
+  bool ShouldHandle(zeeDetection detection, bool isFinished);
 };
 
 /************************************************************************************/
@@ -116,9 +116,9 @@ class zeeDecoratorLed : public zeeMoveRobot
 public:
   zeeDecoratorLed(zeeArduino* arduino, unsigned long executeLength, zeeMoveRobot* robot, zeeOnOffLED* onOffLed);
 
-  bool Handle(zeeDetection* detection, bool isFinished);
+  bool Handle(zeeDetection detection, bool isFinished);
 protected:
-  virtual bool ShouldHandle(zeeDetection* detection, bool isFinished);
+  bool ShouldHandle(zeeDetection detection, bool isFinished);
   void DoExecute();
 private:
   zeeOnOffLED* _onOffLed;
@@ -131,10 +131,10 @@ class zeeDecoratorPrintLn : public zeeMoveRobot
 {
 public:
   zeeDecoratorPrintLn(zeeArduino* arduino, int moveTime, zeeMoveRobot* robot);
-  bool Handle(zeeDetection* detection, bool isFinished);
+  bool Handle(zeeDetection detection, bool isFinished);
 protected:
   void DoExecute();
-  virtual bool ShouldHandle(zeeDetection* detection, bool isFinished);
+  bool ShouldHandle(zeeDetection detection, bool isFinished);
   void Print(char description[], long value, char extension[]);
   void Print(char description[], bool value, char extension[]);
 };

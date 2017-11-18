@@ -9,22 +9,37 @@
 
 #include "zeeArduino.h"
 #include "zeeSensorPins.h"
+#include "zeeExecute.h"
 
-class zeeHC_SR04_Sensor
+class zeeHCSR04param 
 {
 public:
-  zeeHC_SR04_Sensor(zeeArduino* arduino);
-  zeeHC_SR04_Sensor(zeeArduino* arduino, int measureSamples, int measureSampleDelay, int sonicSlop);
-  ~zeeHC_SR04_Sensor();
+  zeeHCSR04param(unsigned int echoPin, unsigned int triggerPin, int measureSamples, int measureSampleDelay, unsigned int offset = 0);
+  unsigned int EchoPin;
+  unsigned int TriggerPin;
+  int MeasureSamples;
+  int MeasureSampleDelay;
+  unsigned int Offset;
+};
 
-  bool IsEqual(long diff);
-  long DiffInMM(long distanceRf, long distanceRr);
-  long GetDistanceMm(int trigPin, int offset = 0);
-  long GetSingleDistanceMm(int trigPin, int offset = 0);
+class zeeHC_SR04_Sensor: public zeeExecute
+{
+public:  
+  zeeHC_SR04_Sensor(zeeArduino* arduino, unsigned long executeLength, zeeHCSR04param param);
+  ~zeeHC_SR04_Sensor();
+    
+  long GetDistanceMm();
+  long GetSingleDistanceMm();
+protected:
+  void DoExecute();
 private:
   zeeArduino* _arduino;
+  unsigned int _echoPin;
+  unsigned int _triggerPin;
   int _measureSamples = cMeasureSamples; //how many samples to read and take average of the readings
   int _measureSampleDelay = cSampleMeasurementDelay; //in ms
-  int _sonicSlop = cSonicSlop; //in mm, our sensor is not extremely accurate, we use slop to be acceptable values that are equal.
+  
+  unsigned int _offset;
+  long _distance;
 };
 #endif

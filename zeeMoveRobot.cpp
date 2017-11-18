@@ -18,7 +18,7 @@ zeeMoveRobot::~zeeMoveRobot()
     delete _robot;
 }
 
-bool zeeMoveRobot::Handle(zeeDetection * detection, bool isFinished)
+bool zeeMoveRobot::Handle(zeeDetection detection, bool isFinished)
 {
   bool handled = false;
   if (ShouldHandle(detection, isFinished))
@@ -61,7 +61,7 @@ zeeMoveRobot * zeeMoveRobot::GetRobot()
   return _robot;
 }
 
-void zeeMoveRobot::CallNextRobot(zeeDetection* detection, bool isFinished)
+void zeeMoveRobot::CallNextRobot(zeeDetection detection, bool isFinished)
 {
   //we call our chained robot to see if it needs to handle the request
   zeeMoveRobot* nextRobot = GetRobot();
@@ -77,12 +77,12 @@ zeeDecoratorLed::zeeDecoratorLed(zeeArduino* arduino, unsigned long executeLengt
   _onOffLed = onOffLed;
 }
 
-bool zeeDecoratorLed::Handle(zeeDetection* detection, bool isFinished)
+bool zeeDecoratorLed::Handle(zeeDetection detection, bool isFinished)
 {
   if (!isFinished)
   {
     bool ledsOn = false;
-    if (detection->GetIsEqual())
+    if (detection.GetIsEqual())
       ledsOn = true;
     SetLeds(ledsOn);
   }
@@ -109,7 +109,7 @@ void zeeDecoratorLed::SetLeds(bool setOn)
   _onOffLed->Set2LEDs(setOn);
 }
 
-bool zeeDecoratorLed::ShouldHandle(zeeDetection * detection, bool isFinished)
+bool zeeDecoratorLed::ShouldHandle(zeeDetection detection, bool isFinished)
 {
   return true;
 }
@@ -134,10 +134,10 @@ void zeeTurnRight::DoExecute()
   GetMotorRL()->Execute();
 }
 
-bool zeeTurnRight::ShouldHandle(zeeDetection * detection, bool isFinished)
+bool zeeTurnRight::ShouldHandle(zeeDetection detection, bool isFinished)
 {
-  return !isFinished && !detection->GetIsEqual() &&
-    detection->GetDiffBetweenRightSensors() > 0;
+  return !isFinished && !detection.GetIsEqual() &&
+    detection.GetDiffBetweenRightSensors() > 0;
 }
 
 /************************************************************************************/
@@ -156,11 +156,11 @@ void zeeTurnLeft::DoExecute()
   GetMotorRR()->Execute();
 }
 
-bool zeeTurnLeft::ShouldHandle(zeeDetection * detection, bool isFinished)
+bool zeeTurnLeft::ShouldHandle(zeeDetection detection, bool isFinished)
 {
-  return (!isFinished && detection->GetObstacleForward() &&
-    !detection->GetIsEqual() &&
-    detection->GetDiffBetweenRightSensors() < 0);
+  return (!isFinished && detection.GetObstacleForward() &&
+    !detection.GetIsEqual() &&
+    detection.GetDiffBetweenRightSensors() < 0);
 }
 
 /************************************************************************************/
@@ -180,10 +180,10 @@ void zeeGoStraight::DoExecute()
   GetMotorRR()->Execute();
 }
 
-bool zeeGoStraight::ShouldHandle(zeeDetection * detection, bool isFinished)
+bool zeeGoStraight::ShouldHandle(zeeDetection detection, bool isFinished)
 {
-  return (!isFinished && detection->GetIsEqual() &&
-    !detection->GetObstacleForward());
+  return (!isFinished && detection.GetIsEqual() &&
+    !detection.GetObstacleForward());
 }
 
 /************************************************************************************/
@@ -201,9 +201,9 @@ void zeeStop::DoExecute()
   delayMicroseconds(GetMoveTime());
 }
 
-bool zeeStop::ShouldHandle(zeeDetection * detection, bool isFinished)
+bool zeeStop::ShouldHandle(zeeDetection detection, bool isFinished)
 {
-  return !isFinished && detection->GetObstacleForward();
+  return !isFinished && detection.GetObstacleForward();
 }
 
 /************************************************************************************/
@@ -219,7 +219,7 @@ void zeeFinished::DoExecute()
   delayMicroseconds(GetMoveTime());
 }
 
-bool zeeFinished::ShouldHandle(zeeDetection * detection, bool isFinished)
+bool zeeFinished::ShouldHandle(zeeDetection detection, bool isFinished)
 {
   return isFinished;
 }
@@ -239,10 +239,10 @@ void zeeSmallTurnLeft::DoExecute()
   GetMotorFR()->Execute();
 }
 
-bool zeeSmallTurnLeft::ShouldHandle(zeeDetection * detection, bool isFinished)
+bool zeeSmallTurnLeft::ShouldHandle(zeeDetection detection, bool isFinished)
 {
-  return (!isFinished && !detection->GetIsEqual() &&
-    detection->GetDiffBetweenRightSensors() < 0);
+  return (!isFinished && !detection.GetIsEqual() &&
+    detection.GetDiffBetweenRightSensors() < 0);
 }
 
 /************************************************************************************/
@@ -260,10 +260,10 @@ void zeeSmallTurnRight::DoExecute()
   GetMotorFL()->Execute();
 }
 
-bool zeeSmallTurnRight::ShouldHandle(zeeDetection * detection, bool isFinished)
+bool zeeSmallTurnRight::ShouldHandle(zeeDetection detection, bool isFinished)
 {
-  return (!isFinished && !detection->GetIsEqual() &&
-    detection->GetDiffBetweenRightSensors() > 0);
+  return (!isFinished && !detection.GetIsEqual() &&
+    detection.GetDiffBetweenRightSensors() > 0);
 }
 
 /************************************************************************************/
@@ -273,12 +273,12 @@ zeeDecoratorPrintLn::zeeDecoratorPrintLn(zeeArduino * arduino, int moveTime, zee
 {
 }
 
-bool zeeDecoratorPrintLn::Handle(zeeDetection * detection, bool isFinished)
+bool zeeDecoratorPrintLn::Handle(zeeDetection detection, bool isFinished)
 {
-  Print("ObstacleForward: ", detection->GetObstacleForward(), "");
-  Print("IsEqual: ", detection->GetIsEqual(), "");
-  Print("DetectLine: ", detection->GetDetectLine(), "");
-  Print("DiffBetweenRightSensors: ", detection->GetDiffBetweenRightSensors(), "mm");
+  Print("ObstacleForward: ", detection.GetObstacleForward(), "");
+  Print("IsEqual: ", detection.GetIsEqual(), "");
+  Print("DetectLine: ", detection.GetDetectLine(), "");
+  Print("DiffBetweenRightSensors: ", detection.GetDiffBetweenRightSensors(), "mm");
 
   CallNextRobot(detection, isFinished);
   return false;
@@ -302,7 +302,7 @@ void zeeDecoratorPrintLn::DoExecute()
 {
 }
 
-bool zeeDecoratorPrintLn::ShouldHandle(zeeDetection * detection, bool isFinished)
+bool zeeDecoratorPrintLn::ShouldHandle(zeeDetection detection, bool isFinished)
 {
   return true;
 }

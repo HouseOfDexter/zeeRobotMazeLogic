@@ -6,7 +6,7 @@ class zeeArduino
 {
 /*This class is a fascade around Arduino.h, allowing us to unit test around the Sensors and Motors*/
 public:
-  zeeArduino(unsigned long updateInterval);
+  zeeArduino(unsigned int updateInterval, unsigned int intervalRunTime);
   ~zeeArduino();
 
   virtual void delay(unsigned long us);
@@ -18,9 +18,11 @@ public:
 
   virtual unsigned long millis();
 
-  unsigned long GetUpdateInterval() { return _updateInterval; }
+  unsigned int GetUpdateInterval() { return _updateInterval; }
+  unsigned int GetIntervalRunTime() { return _intervalRunTime; }
 private:
-  unsigned long _updateInterval;
+  unsigned int _updateInterval;
+  unsigned int _intervalRunTime;
 };
 
 #endif

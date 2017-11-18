@@ -1,9 +1,20 @@
 #include "zeeAdafruitDCMotor.h"
 
-zeeAdafruitDCMotor::zeeAdafruitDCMotor(zeeArduino* arduino, unsigned long executeLength, unsigned int pin, Adafruit_DCMotor * dcMotor)
-  : zeeDCMotor(arduino, executeLength, pin)
+zeeAdafruitDCMparam::zeeAdafruitDCMparam(unsigned int pin, Adafruit_DCMotor * dcMotor)
 {
-  _dcMotor = dcMotor;
+  Pin = pin;
+  DcMotor = dcMotor;
+}
+
+zeeAdafruitDCMparam::~zeeAdafruitDCMparam()
+{
+}
+
+zeeAdafruitDCMotor::zeeAdafruitDCMotor(zeeArduino* arduino, unsigned long executeLength, zeeAdafruitDCMparam param)
+  : zeeDCMotor(arduino, executeLength)
+{
+  _dcMotor = param.DcMotor;
+  _pin = param.Pin;
 }
 
 zeeAdafruitDCMotor::~zeeAdafruitDCMotor()
@@ -17,3 +28,4 @@ void zeeAdafruitDCMotor::Execute()
 void zeeAdafruitDCMotor::Setup(int speed)
 {
 }
+

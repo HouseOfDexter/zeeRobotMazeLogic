@@ -5,24 +5,27 @@
 #include "zeeMoveRobot.h"
 #include "zeeLineReader.h"
 #include "zeeExecute.h"
+#include "zeeSonicSensors.h"
 
 class zeeRobotMazeLogic : public zeeExecute
 {
 public:
-  zeeRobotMazeLogic(zeeArduino* arduino, unsigned long executeLength, zeeHC_SR04_Sensor* sr04, zeeMoveRobot* moveRobot, zeeLineReader* lineReader, long distanceForwardDetectionMm);
+  zeeRobotMazeLogic(zeeArduino* arduino, unsigned long executeLength, zeeSonicSensors* sonicSensors, zeeMoveRobot* moveRobot, zeeLineReader* lineReader, long distanceForwardDetectionMm);
   ~zeeRobotMazeLogic();
 
   static zeeMoveRobot* SetMoveRobots(zeeArduino* arduino, zeeMoveRobot* zeeMoveRobot, zeeMotors* motors, int moveTime);
+
+  void AfterExecute();
 
   bool IsFinished();
 protected:
   void DoExecute();
 private:
-  zeeHC_SR04_Sensor* _sr04;
+  zeeSonicSensors* _sonicSensors;
   zeeMoveRobot* _moveRobot;
   zeeLineReader* _lineReader;
   long _distanceForwardDetectionMm;
 
-  bool ObstacleForward(long distance);
+  bool ObstacleForward();
 };
 #endif

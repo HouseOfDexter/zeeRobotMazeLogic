@@ -1,9 +1,8 @@
 #include "zeeDCMotor.h"
 
-zeeDCMotor::zeeDCMotor(zeeArduino* arduino, unsigned long executeLength, unsigned int pin)
+zeeDCMotor::zeeDCMotor(zeeArduino* arduino, unsigned long executeLength)
   :zeeExecute(arduino, executeLength)
-{
-  _pin = pin;
+{  
 }
 
 zeeDCMotor::~zeeDCMotor()

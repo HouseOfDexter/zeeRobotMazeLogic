@@ -36,6 +36,11 @@ const unsigned int cLineReaderPin = 4;
 const unsigned int cSonicSlop = 7;
 const unsigned int cMeasureSamples = 10;
 const unsigned int cSampleMeasurementDelay = 5;
+const unsigned int cSonicOffset = 4;
+
+const unsigned int cUpdateInterval = 10;
+const unsigned int cLedUpdateInterval = 500;
+const unsigned int cIntervalRunTime = 10;
 
 
 

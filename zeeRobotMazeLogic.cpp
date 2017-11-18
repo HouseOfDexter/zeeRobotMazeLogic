@@ -6,10 +6,10 @@
 const int cSmallTurnTime = 50;
 const int cBreakTime = 100;
 
-zeeRobotMazeLogic::zeeRobotMazeLogic(zeeArduino* arduino, unsigned long executeLength, zeeHC_SR04_Sensor* sr04, zeeMoveRobot* moveRobot, zeeLineReader* lineReader, long distanceForwardDetectionMm)
+zeeRobotMazeLogic::zeeRobotMazeLogic(zeeArduino* arduino, unsigned long executeLength, zeeSonicSensors* sonicSensors, zeeMoveRobot* moveRobot, zeeLineReader* lineReader, long distanceForwardDetectionMm)
   : zeeExecute(arduino, executeLength)
 {
-  _sr04 = sr04;
+  _sonicSensors = sonicSensors;
   _moveRobot = moveRobot;
   _lineReader = lineReader;
   _distanceForwardDetectionMm = distanceForwardDetectionMm;
@@ -37,19 +37,20 @@ zeeMoveRobot* zeeRobotMazeLogic::SetMoveRobots(zeeArduino* arduino, zeeMoveRobot
   return smallTurnLeft;
 }
 
-bool zeeRobotMazeLogic::ObstacleForward(long distance)
+void zeeRobotMazeLogic::AfterExecute()
+{
+  long differenceBetweenRightSensors = _sonicSensors->DifferenceBetweenRightSensorsInMM();
+  bool isEqual = _sonicSensors->IsEqual();
+  bool obstacleForward = _sonicSensors->ObstacleForward();
+  bool detectLine = _lineReader->DetectLine();
+  
+  _moveRobot->Handle(zeeDetection(detectLine, obstacleForward, isEqual, differenceBetweenRightSensors), detectLine);  
+}
+
+bool zeeRobotMazeLogic::ObstacleForward()
 {
   //long distance = GetDistanceMm(_trigForward, _echoForward);
-  bool obstacleForward;
-  if (distance < _distanceForwardDetectionMm)
-  {
-    obstacleForward = true;
-  }
-  else
-  {
-    obstacleForward = false;
-  }
-  return obstacleForward;
+  return _sonicSensors->ObstacleForward();
 }
 
 bool zeeRobotMazeLogic::IsFinished()
@@ -59,20 +60,6 @@ bool zeeRobotMazeLogic::IsFinished()
 
 void zeeRobotMazeLogic::DoExecute()
 {
-  //right forward sensor
-  long distanceRF = _sr04->GetDistanceMm(cTrigRFPin);
-  //right rear sensor
-  long distanceRR = _sr04->GetDistanceMm(cTrigRRPin, 5);
-  long differenceBetweenRightSensors = _sr04->DiffInMM(distanceRF, distanceRR);
-  bool isEqual = _sr04->IsEqual(differenceBetweenRightSensors);
-  //forward sensor
-  long forwardSensor = _sr04->GetSingleDistanceMm(cTrigForwardPin);
-  bool obstacleForward = ObstacleForward(forwardSensor);
-
-  bool detectLine = _lineReader->DetectLine();
-
-  zeeDetection* detection = new zeeDetection(detectLine, obstacleForward, isEqual, differenceBetweenRightSensors);
-  _moveRobot->Handle(detection, detectLine);
-
-  delete detection;
+  _sonicSensors->Execute();
+  _lineReader->Execute();
 }

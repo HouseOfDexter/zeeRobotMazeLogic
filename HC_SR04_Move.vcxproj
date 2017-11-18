@@ -48,7 +48,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(ProjectDir)..\HC_SR04_Move;$(ProjectDir)..\libraries\Adafruit_Motor_Shield_V2_Library;E:\Program Files (x86)\Arduino\hardware\arduino\avr\libraries\Wire\src;$(ProjectDir)..\libraries\Adafruit_Motor_Shield_V2_Library\utility;E:\Program Files (x86)\Arduino\hardware\arduino\avr\libraries\Wire\src\utility;E:\Program Files (x86)\Arduino\libraries;E:\Program Files (x86)\Arduino\hardware\arduino\avr\libraries;$(ProjectDir)..\libraries;E:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino;E:\Program Files (x86)\Arduino\hardware\arduino\avr\variants\standard;E:\Program Files (x86)\Arduino\hardware\tools\avr\avr\include\;E:\Program Files (x86)\Arduino\hardware\tools\avr\avr\include\avr\;E:\Program Files (x86)\Arduino\hardware\tools\avr\lib\gcc\avr\4.8.1\include;E:\Program Files (x86)\Arduino\hardware\tools\avr\lib\gcc\avr\4.9.2\include;E:\Program Files (x86)\Arduino\hardware\tools\avr\lib\gcc\avr\4.9.3\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)..\HC_SR04_Move;E:\Program Files (x86)\Arduino\hardware\arduino\avr\libraries\Wire\src;E:\Program Files (x86)\Arduino\libraries;E:\Program Files (x86)\Arduino\hardware\arduino\avr\libraries;$(ProjectDir)..\libraries;E:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino;E:\Program Files (x86)\Arduino\hardware\arduino\avr\variants\standard;E:\Program Files (x86)\Arduino\hardware\tools\avr\avr\include\;E:\Program Files (x86)\Arduino\hardware\tools\avr\avr\include\avr\;E:\Program Files (x86)\Arduino\hardware\tools\avr\lib\gcc\avr\4.8.1\include;E:\Program Files (x86)\Arduino\hardware\tools\avr\lib\gcc\avr\4.9.2\include;E:\Program Files (x86)\Arduino\hardware\tools\avr\lib\gcc\avr\4.9.3\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <ForcedIncludeFiles>$(ProjectDir)__vm\.HC_SR04_Move.vsarduino.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
       <IgnoreStandardIncludePath>false</IgnoreStandardIncludePath>
       <PreprocessorDefinitions>__AVR_ATmega328p__;__AVR_ATmega328P__;_VMDEBUG=1;F_CPU=16000000L;ARDUINO=10805;ARDUINO_AVR_UNO;ARDUINO_ARCH_AVR;__cplusplus=201103L;_VMICRO_INTELLISENSE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -81,41 +81,36 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Elegoo_DCMotor.h" />
-    <ClInclude Include="zeeAdafruitDCMotor.h" />
+    <ClInclude Include="zee298DualHBridgeMotorDriver.h" />
     <ClInclude Include="zeeArduino.h" />
-    <ClInclude Include="zeeDCMotor.h" />
+    <ClInclude Include="zeeMotors.h" />
     <ClInclude Include="zeeDetection.h" />
-    <ClInclude Include="zeeElegooDCMotor.h" />
     <ClInclude Include="zeeExecute.h" />
     <ClInclude Include="zeeHC_SR04.h" />
     <ClInclude Include="zeeLineReader.h" />
     <ClInclude Include="zeeMotorPins.h" />
-    <ClInclude Include="zeeMotorShield.h" />
     <ClInclude Include="zeeRobotMazeLogic.h" />
-    <ClInclude Include="zeeOnOffLED.h" />
     <ClInclude Include="zeeMoveRobot.h" />
     <ClInclude Include="zeeSensorPins.h" />
     <ClInclude Include="zeeSonicSensors.h" />
+    <ClInclude Include="zeeStateLED.h" />
     <ClInclude Include="__vm\.HC_SR04_Move.vsarduino.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Elegoo_DCMotor.cpp" />
-    <ClCompile Include="zeeAdafruitDCMotor.cpp" />
+    <ClCompile Include="zee298DualHBridgeMotorDriver.cpp" />
     <ClCompile Include="zeeArduino.cpp" />
-    <ClCompile Include="zeeDCMotor.cpp" />
+    <ClCompile Include="zeeMotors.cpp" />
     <ClCompile Include="zeeDetection.cpp" />
-    <ClCompile Include="zeeElegooDCMotor.cpp" />
     <ClCompile Include="zeeExecute.cpp" />
     <ClCompile Include="zeeHC_SR04.cpp" />
     <ClCompile Include="zeeLineReader.cpp" />
     <ClCompile Include="zeeMotorPins.cpp" />
-    <ClCompile Include="zeeMotorShield.cpp" />
     <ClCompile Include="zeeRobotMazeLogic.cpp" />
-    <ClCompile Include="zeeOnOffLED.cpp" />
     <ClCompile Include="zeeMoveRobot.cpp" />
     <ClCompile Include="zeeSensorPins.cpp" />
     <ClCompile Include="zeeSonicSensors.cpp" />
+    <ClCompile Include="zeeStateLED.cpp" />
   </ItemGroup>
   <PropertyGroup>
     <DebuggerFlavor>VisualMicroDebugger</DebuggerFlavor>

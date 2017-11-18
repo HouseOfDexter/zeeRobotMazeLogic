@@ -42,7 +42,7 @@ void zeeRobotMazeLogic::AfterExecute()
   long differenceBetweenRightSensors = _sonicSensors->DifferenceBetweenRightSensorsInMM();
   bool isEqual = _sonicSensors->IsEqual();
   bool obstacleForward = _sonicSensors->ObstacleForward();
-  bool detectLine = _lineReader->DetectLine();
+  bool detectLine = _lineReader->DetectLeft() && _lineReader->DetectMiddle() && _lineReader->DetectRight();
   
   _moveRobot->Handle(zeeDetection(detectLine, obstacleForward, isEqual, differenceBetweenRightSensors), detectLine);  
 }

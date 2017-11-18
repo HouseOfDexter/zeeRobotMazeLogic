@@ -8,23 +8,20 @@
 #include "WProgram.h"
 #endif
 
-class zeeOnOffLED
+class zeeOnOffLED: public zeeStateLED
 {
 public:
   zeeOnOffLED();  
-  zeeOnOffLED(zeeArduino* arduino, int ledPin1, int ledPin2);
-  zeeOnOffLED(zeeArduino* arduino, int ledPin1, int ledPin2, int ledPin3);
+  zeeOnOffLED(zeeArduino* arduino, int ledPin1, int ledPin2);  
   ~zeeOnOffLED();
 
-  void Set2LEDs(bool isOn);
-  void Set2LEDs(bool isOn, int ledPin1, int ledPin2);
-  void Set3LEDs(int ledOn);
-  void Set3LEDs(int ledOn, int ledPin1, int ledPin2, int ledPin3);
+  override void StateOn(bool isOn);  
 private:
   zeeArduino* _arduino;
   int _ledPin1;
   int _ledPin2;
   int _ledPin3;
+  bool _isOn;
 };
 
 #endif

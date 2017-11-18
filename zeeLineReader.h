@@ -12,15 +12,19 @@
 class zeeLineReader: public zeeExecute
 {
 public:
-  zeeLineReader(zeeArduino* arduino, unsigned long executeLength, unsigned int pin);
+  zeeLineReader(zeeArduino* arduino, unsigned long executeLength, unsigned int rPin, unsigned int mPin, unsigned int lPin);
   ~zeeLineReader();
 
-  bool DetectLine();
+  bool DetectRight();
+  bool DetectLeft();
+  bool DetectMiddle();
 protected:
   void DoExecute();
 private:
   zeeArduino* arduino;
-  unsigned int _pin;
+  unsigned int _rPin;
+  unsigned int _mPin;
+  unsigned int _lPin;
 };
 
 #endif

@@ -1,5 +1,5 @@
 #include "zeeMoveRobot.h"
-//#include "zeeOnOffLED.h"
+//#include "zeeStateLED.h"
 
 /*This is a Abstract State Class, it knows how to do it's one function and only that*/
 
@@ -36,26 +36,6 @@ unsigned int zeeMoveRobot::GetMoveTime()
   return _moveTime;
 }
 
-zeeDCMotor * zeeMoveRobot::GetMotorFL()
-{
-  return _motors->GetMotorFL();
-}
-
-zeeDCMotor * zeeMoveRobot::GetMotorFR()
-{
-  return _motors->GetMotorFR();
-}
-
-zeeDCMotor * zeeMoveRobot::GetMotorRL()
-{
-  return _motors->GetMotorRL();
-}
-
-zeeDCMotor * zeeMoveRobot::GetMotorRR()
-{
-  return _motors->GetMotorRR();
-}
-
 zeeMoveRobot * zeeMoveRobot::GetRobot()
 {
   return _robot;
@@ -71,10 +51,10 @@ void zeeMoveRobot::CallNextRobot(zeeDetection detection, bool isFinished)
 
 /************************************************************************************/
 
-zeeDecoratorLed::zeeDecoratorLed(zeeArduino* arduino, unsigned long executeLength, zeeMoveRobot* robot, zeeOnOffLED* onOffLed)
+zeeDecoratorLed::zeeDecoratorLed(zeeArduino* arduino, unsigned long executeLength, zeeMoveRobot* robot, zeeStateLED* leds)
   : zeeMoveRobot(arduino, executeLength, robot, NULL)
 {
-  _onOffLed = onOffLed;
+  _leds = leds;
 }
 
 bool zeeDecoratorLed::Handle(zeeDetection detection, bool isFinished)
@@ -99,14 +79,14 @@ bool zeeDecoratorLed::Handle(zeeDetection detection, bool isFinished)
 void zeeDecoratorLed::FlashLeds()
 {
   //We flash the LEDS on and off...
-  _onOffLed->Set2LEDs(true);
+  _leds->StateOn(true);
   delayMicroseconds(500);
-  _onOffLed->Set2LEDs(false);
+  _leds->StateOn(false);
 }
 
 void zeeDecoratorLed::SetLeds(bool setOn)
 {
-  _onOffLed->Set2LEDs(setOn);
+  _leds->StateOn(setOn);
 }
 
 bool zeeDecoratorLed::ShouldHandle(zeeDetection detection, bool isFinished)
@@ -128,10 +108,7 @@ zeeTurnRight::zeeTurnRight(zeeArduino* arduino, int moveTime, zeeMoveRobot * rob
 void zeeTurnRight::DoExecute()
 {
   Serial.println("zeeTurnRight Move");
-  //temp mock moving
-  delayMicroseconds(GetMoveTime());
-  GetMotorFL()->Execute();
-  GetMotorRL()->Execute();
+  _motors->TurnRight();  
 }
 
 bool zeeTurnRight::ShouldHandle(zeeDetection detection, bool isFinished)
@@ -150,10 +127,7 @@ zeeTurnLeft::zeeTurnLeft(zeeArduino* arduino, int moveTime, zeeMoveRobot * robot
 void zeeTurnLeft::DoExecute()
 {
   Serial.println("zeeTurnLeft Move");
-  //temp mock moving
-  delayMicroseconds(GetMoveTime());
-  GetMotorFR()->Execute();
-  GetMotorRR()->Execute();
+  _motors->TurnLeft();
 }
 
 bool zeeTurnLeft::ShouldHandle(zeeDetection detection, bool isFinished)
@@ -172,12 +146,7 @@ zeeGoStraight::zeeGoStraight(zeeArduino* arduino, int moveTime, zeeMoveRobot * r
 void zeeGoStraight::DoExecute()
 {
   Serial.println("zeeGoStraight Move");
-  //temp mock moving
-  delayMicroseconds(GetMoveTime());
-  GetMotorFL()->Execute();
-  GetMotorRL()->Execute();
-  GetMotorFR()->Execute();
-  GetMotorRR()->Execute();
+  _motors->Forward();
 }
 
 bool zeeGoStraight::ShouldHandle(zeeDetection detection, bool isFinished)
@@ -198,7 +167,7 @@ zeeStop::zeeStop(zeeArduino * arduino, int moveTime, zeeMoveRobot * robot, zeeMo
 void zeeStop::DoExecute()
 {
   Serial.println("zeeStop Move");
-  delayMicroseconds(GetMoveTime());
+  _motors->Brake();
 }
 
 bool zeeStop::ShouldHandle(zeeDetection detection, bool isFinished)
@@ -216,7 +185,7 @@ zeeFinished::zeeFinished(zeeArduino * arduino, int moveTime, zeeMoveRobot * robo
 void zeeFinished::DoExecute()
 {
   Serial.println("zeeFinished Move");
-  delayMicroseconds(GetMoveTime());
+  _motors->DisableMotors();
 }
 
 bool zeeFinished::ShouldHandle(zeeDetection detection, bool isFinished)
@@ -234,9 +203,8 @@ zeeSmallTurnLeft::zeeSmallTurnLeft(zeeArduino * arduino, int moveTime, zeeMoveRo
 void zeeSmallTurnLeft::DoExecute()
 {
   Serial.println("zeeSmallTurnLeft Move");
-  //temp mock moving
-  delayMicroseconds(GetMoveTime());
-  GetMotorFR()->Execute();
+  
+  _motors->TurnLeft();
 }
 
 bool zeeSmallTurnLeft::ShouldHandle(zeeDetection detection, bool isFinished)
@@ -255,9 +223,7 @@ zeeSmallTurnRight::zeeSmallTurnRight(zeeArduino * arduino, int moveTime, zeeMove
 void zeeSmallTurnRight::DoExecute()
 {
   Serial.println("zeeSmallTurnLeft Move");
-  //temp mock moving
-  delayMicroseconds(GetMoveTime());
-  GetMotorFL()->Execute();
+  _motors->TurnRight();  
 }
 
 bool zeeSmallTurnRight::ShouldHandle(zeeDetection detection, bool isFinished)

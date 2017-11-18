@@ -34,7 +34,17 @@ void zeeArduino::digitalWrite(uint8_t pin, uint8_t highlow)
   Arduino_h::digitalWrite(pin, highlow);
 }
 
+int zeeArduino::digitalRead(uint8_t pin)
+{
+  return Arduino_h::digitalRead(pin);
+}
+
 unsigned long zeeArduino::millis()
 {
   return Arduino_h::millis();
+}
+
+void zeeArduino::pinMode(byte pin, byte direction)
+{
+  Arduino_h::pinMode(pin, direction);
 }

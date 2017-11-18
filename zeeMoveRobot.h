@@ -6,10 +6,10 @@
 #include "WProgram.h"
 #endif
 
-#include "zeeOnOffLED.h"
+#include "zeeStateLED.h"
 #include "zeeDetection.h"
 #include "zeeExecute.h"
-#include "zeeDCMotor.h"
+#include "zeeMotors.h"
 
 class zeeMoveRobot : zeeExecute
 {
@@ -25,14 +25,10 @@ protected:
   zeeMoveRobot* GetRobot();
   void CallNextRobot(zeeDetection detection, bool isFinished);  
   unsigned int GetMoveTime();
-  zeeDCMotor* GetMotorFL();
-  zeeDCMotor* GetMotorFR();
-  zeeDCMotor* GetMotorRL();
-  zeeDCMotor* GetMotorRR();
+  zeeMotors* _motors;
 private:
   unsigned int _moveTime = defaultMoveTime;
-  zeeMoveRobot* _robot;
-  zeeMotors* _motors;
+  zeeMoveRobot* _robot;  
 };
 
 /************************************************************************************/
@@ -114,14 +110,14 @@ class zeeDecoratorLed : public zeeMoveRobot
     that handles blinking of LEDs for outside status
   */
 public:
-  zeeDecoratorLed(zeeArduino* arduino, unsigned long executeLength, zeeMoveRobot* robot, zeeOnOffLED* onOffLed);
+  zeeDecoratorLed(zeeArduino* arduino, unsigned long executeLength, zeeMoveRobot* robot, zeeStateLED* _leds);
 
   bool Handle(zeeDetection detection, bool isFinished);
 protected:
   bool ShouldHandle(zeeDetection detection, bool isFinished);
   void DoExecute();
 private:
-  zeeOnOffLED* _onOffLed;
+  zeeStateLED* _leds;
   void FlashLeds();
   void SetLeds(bool setOn);
 };

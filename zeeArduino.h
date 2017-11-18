@@ -15,14 +15,19 @@ public:
   virtual unsigned long pulseInLong(uint8_t pin, uint8_t state, unsigned long timeout=0);
 
   virtual void digitalWrite(uint8_t pin, uint8_t highlow);
+  virtual int digitalRead(uint8_t pin);
 
   virtual unsigned long millis();
 
   unsigned int GetUpdateInterval() { return _updateInterval; }
   unsigned int GetIntervalRunTime() { return _intervalRunTime; }
+
+  void pinMode(byte pin, byte direction);
 private:
   unsigned int _updateInterval;
   unsigned int _intervalRunTime;
+
+  
 };
 
 #endif

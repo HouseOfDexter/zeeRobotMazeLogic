@@ -20,6 +20,10 @@ zeeElegooDCMotor::zeeElegooDCMotor(zeeArduino* arduino, unsigned long executeLen
   _in1Pin = param.In1Pin;
   _in2Pin = param.In2Pin;
   _enaPin = param.EnaPin;
+
+  arduino->pinMode(_in1Pin, OUTPUT);   
+  arduino->pinMode(_in2Pin, OUTPUT);
+  arduino->pinMode(_enaPin, OUTPUT);
 }
 
 void zeeElegooDCMotor::DoExecute()

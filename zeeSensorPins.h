@@ -6,24 +6,17 @@
 #include "WProgram.h"
 #endif
 
-/*
-Note the echo pin should be +1 of the trigger pin if you use the zeeHC_SRO4 code.
-The pins should line up with how you have your pins installed on the board.
-*/
-
 const unsigned int baseUS = 8;
 
-//forward sensor  trigger pin needs to +1 of echo pin
-const unsigned int  cTrigForwardPin = baseUS + 5;
-const unsigned int cEchoForwardPin = baseUS + 4;
+const unsigned int cTrigRFPin = baseUS + 3;//11
+const unsigned int cEchoRFPin = baseUS + 2;//10
 
-//right forward sensor trigger pin needs to +1 of echo pin
-const unsigned int cTrigRFPin = baseUS + 3;
-const unsigned int cEchoRFPin = baseUS + 2;
+const unsigned int cTrigRRPin = baseUS + 1;//9
+const unsigned int cEchoRRPin = baseUS + 0;//8
 
-//right rear sensor trigger pin needs to +1 of echo pin
-const unsigned int cTrigRRPin = baseUS + 1;
-const unsigned int cEchoRRPin = baseUS + 0;
+const unsigned int  cTrigForwardPin = 5;
+const unsigned int cEchoForwardPin = 4;
+
 
 //LEDs to give us feedback
 const unsigned int cLedPin1 = 3;
@@ -31,7 +24,9 @@ const unsigned int cLedPin2 = 2;
 const unsigned int cLedPin3 = 1;
 
 //LineReader
-const unsigned int cLineReaderPin = 4;
+const unsigned int cLineReaderRPin = 10;
+const unsigned int cLineReaderMPin = 4;
+const unsigned int cLineReaderLPin = 2;
 
 const unsigned int cSonicSlop = 7;
 const unsigned int cMeasureSamples = 10;

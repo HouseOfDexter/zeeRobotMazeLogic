@@ -22,8 +22,8 @@ protected:
   virtual void DoExecute() = 0;
   void SetIsExecuting(bool value) { _isExecuting = value; }  
   unsigned long _lastUpdate;
-private:
   zeeArduino* _arduino;
+private:  
   bool _isExecuting;
   unsigned long _executeLength;
   unsigned long _runningLength;

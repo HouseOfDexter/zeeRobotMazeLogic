@@ -6,6 +6,7 @@ class zeeSSParam
 {
 public:
   zeeSSParam(zeeHC_SR04_Sensor* frontSensor, zeeHC_SR04_Sensor* rightFrontSensor, zeeHC_SR04_Sensor* rightRearSensor, int sonicSlop, unsigned int distanceForwardDetectionMm);
+  virtual ~zeeSSParam();
   zeeHC_SR04_Sensor* FrontSensor;
   zeeHC_SR04_Sensor* RightFrontSensor;
   zeeHC_SR04_Sensor* RightRearSensor;
@@ -17,7 +18,7 @@ class zeeSonicSensors: public zeeExecute
 {
 public:
   zeeSonicSensors(zeeArduino* arduino, unsigned long executeLength, zeeSSParam param);
-  ~zeeSonicSensors();
+  virtual ~zeeSonicSensors();
   bool IsEqual();
   bool ObstacleForward();
   long DifferenceBetweenRightSensorsInMM();

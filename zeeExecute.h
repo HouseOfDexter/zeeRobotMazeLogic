@@ -2,11 +2,6 @@
 #define zeeExecute_h
 #include "zeeArduino.h"
 
-#if ARDUINO >= 100
-#include "Arduino.h"
-#else
-#include "WProgram.h"
-#endif
 class zeeExecute
 {
   /*
@@ -14,7 +9,7 @@ class zeeExecute
   */
 public:
   zeeExecute(zeeArduino* arduino, unsigned long executeLength = 0);
-  ~zeeExecute();
+  virtual ~zeeExecute();
 
   void Execute();
   bool IsExecuting() { return _isExecuting; }

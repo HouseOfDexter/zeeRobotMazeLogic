@@ -5,7 +5,7 @@ class zeeStateLED
 {
 public:
   zeeStateLED(zeeArduino* arduino, unsigned int ledPins[], int length);
-  ~zeeStateLED();
+  virtual ~zeeStateLED();
   virtual void StateOn(unsigned int index);
   void AllOff();
 private:

@@ -3,17 +3,11 @@
 #include "zeeArduino.h"
 #include "zeeExecute.h"
 
-#if ARDUINO >= 100
-#include "Arduino.h"
-#else
-#include "WProgram.h"
-#endif
-
 class zeeLineReader: public zeeExecute
 {
 public:
   zeeLineReader(zeeArduino* arduino, unsigned long executeLength, unsigned int rPin, unsigned int mPin, unsigned int lPin);
-  ~zeeLineReader();
+  virtual ~zeeLineReader();
 
   bool DetectRight();
   bool DetectLeft();

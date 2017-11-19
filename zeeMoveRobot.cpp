@@ -1,4 +1,5 @@
 #include "zeeMoveRobot.h"
+#include "stddef.h"
 //#include "zeeStateLED.h"
 
 /*This is a Abstract State Class, it knows how to do it's one function and only that*/
@@ -54,7 +55,12 @@ void zeeMoveRobot::CallNextRobot(zeeDetection detection, bool isFinished)
 zeeDecoratorLed::zeeDecoratorLed(zeeArduino* arduino, unsigned long executeLength, zeeMoveRobot* robot, zeeStateLED* leds)
   : zeeMoveRobot(arduino, executeLength, robot, NULL)
 {
+  _arduino = arduino;
   _leds = leds;
+}
+
+zeeDecoratorLed::~zeeDecoratorLed()
+{
 }
 
 bool zeeDecoratorLed::Handle(zeeDetection detection, bool isFinished)
@@ -80,7 +86,7 @@ void zeeDecoratorLed::FlashLeds()
 {
   //We flash the LEDS on and off...
   _leds->StateOn(true);
-  delayMicroseconds(500);
+  _arduino->delayMicroseconds(500);
   _leds->StateOn(false);
 }
 
@@ -105,9 +111,12 @@ zeeTurnRight::zeeTurnRight(zeeArduino* arduino, int moveTime, zeeMoveRobot * rob
 {
 }
 
-void zeeTurnRight::DoExecute()
+zeeTurnRight::~zeeTurnRight()
 {
-  Serial.println("zeeTurnRight Move");
+}
+
+void zeeTurnRight::DoExecute()
+{  
   _motors->TurnRight();  
 }
 
@@ -124,9 +133,12 @@ zeeTurnLeft::zeeTurnLeft(zeeArduino* arduino, int moveTime, zeeMoveRobot * robot
 {
 }
 
-void zeeTurnLeft::DoExecute()
+zeeTurnLeft::~zeeTurnLeft()
 {
-  Serial.println("zeeTurnLeft Move");
+}
+
+void zeeTurnLeft::DoExecute()
+{  
   _motors->TurnLeft();
 }
 
@@ -141,11 +153,14 @@ bool zeeTurnLeft::ShouldHandle(zeeDetection detection, bool isFinished)
 
 zeeGoStraight::zeeGoStraight(zeeArduino* arduino, int moveTime, zeeMoveRobot * robot, zeeMotors* motors)
   :zeeMoveRobot(arduino, moveTime, robot, motors)
-{};
+{}
+zeeGoStraight::~zeeGoStraight()
+{
+}
+;
 
 void zeeGoStraight::DoExecute()
-{
-  Serial.println("zeeGoStraight Move");
+{  
   _motors->Forward();
 }
 
@@ -164,9 +179,12 @@ zeeStop::zeeStop(zeeArduino * arduino, int moveTime, zeeMoveRobot * robot, zeeMo
 {
 }
 
+zeeStop::~zeeStop()
+{
+}
+
 void zeeStop::DoExecute()
 {
-  Serial.println("zeeStop Move");
   _motors->Brake();
 }
 
@@ -182,9 +200,12 @@ zeeFinished::zeeFinished(zeeArduino * arduino, int moveTime, zeeMoveRobot * robo
 {
 }
 
-void zeeFinished::DoExecute()
+zeeFinished::~zeeFinished()
 {
-  Serial.println("zeeFinished Move");
+}
+
+void zeeFinished::DoExecute()
+{  
   _motors->DisableMotors();
 }
 
@@ -200,10 +221,12 @@ zeeSmallTurnLeft::zeeSmallTurnLeft(zeeArduino * arduino, int moveTime, zeeMoveRo
 {
 }
 
-void zeeSmallTurnLeft::DoExecute()
+zeeSmallTurnLeft::~zeeSmallTurnLeft()
 {
-  Serial.println("zeeSmallTurnLeft Move");
-  
+}
+
+void zeeSmallTurnLeft::DoExecute()
+{  
   _motors->TurnLeft();
 }
 
@@ -220,9 +243,12 @@ zeeSmallTurnRight::zeeSmallTurnRight(zeeArduino * arduino, int moveTime, zeeMove
 {
 }
 
-void zeeSmallTurnRight::DoExecute()
+zeeSmallTurnRight::~zeeSmallTurnRight()
 {
-  Serial.println("zeeSmallTurnLeft Move");
+}
+
+void zeeSmallTurnRight::DoExecute()
+{  
   _motors->TurnRight();  
 }
 
@@ -239,6 +265,10 @@ zeeDecoratorPrintLn::zeeDecoratorPrintLn(zeeArduino * arduino, int moveTime, zee
 {
 }
 
+zeeDecoratorPrintLn::~zeeDecoratorPrintLn()
+{
+}
+
 bool zeeDecoratorPrintLn::Handle(zeeDetection detection, bool isFinished)
 {
   Print("ObstacleForward: ", detection.GetObstacleForward(), "");
@@ -252,16 +282,16 @@ bool zeeDecoratorPrintLn::Handle(zeeDetection detection, bool isFinished)
 
 void zeeDecoratorPrintLn::Print(char description[], long value, char extension[])
 {
-  Serial.println(description);
-  Serial.print(value);
-  Serial.println(extension);
+  //Serial.println(description);
+  //Serial.print(value);
+  //Serial.println(extension);
 }
 
 void zeeDecoratorPrintLn::Print(char description[], bool value, char extension[])
 {
-  Serial.println(description);
-  Serial.print(value);
-  Serial.println(extension);
+  //Serial.println(description);
+  //Serial.print(value);
+  //Serial.println(extension);
 }
 
 void zeeDecoratorPrintLn::DoExecute()

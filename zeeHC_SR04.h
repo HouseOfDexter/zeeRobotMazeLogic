@@ -1,12 +1,6 @@
 #ifndef zeeHC_SR04_Sensor_h
 #define zeeHC_SR04_Sensor_h
 
-#if ARDUINO >= 100
-#include "Arduino.h"
-#else
-#include "WProgram.h"
-#endif
-
 #include "zeeArduino.h"
 #include "zeeSensorPins.h"
 #include "zeeExecute.h"
@@ -15,6 +9,7 @@ class zeeHCSR04param
 {
 public:
   zeeHCSR04param(unsigned int echoPin, unsigned int triggerPin, int measureSamples, int measureSampleDelay, unsigned int offset = 0);
+  virtual ~zeeHCSR04param();
   unsigned int EchoPin;
   unsigned int TriggerPin;
   int MeasureSamples;
@@ -26,7 +21,7 @@ class zeeHC_SR04_Sensor: public zeeExecute
 {
 public:  
   zeeHC_SR04_Sensor(zeeArduino* arduino, unsigned long executeLength, zeeHCSR04param param);
-  ~zeeHC_SR04_Sensor();
+  virtual ~zeeHC_SR04_Sensor();
     
   long GetDistanceMm();
   long GetSingleDistanceMm();

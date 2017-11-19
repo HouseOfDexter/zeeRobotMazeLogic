@@ -11,7 +11,7 @@ class zeeRobotMazeLogic : public zeeExecute
 {
 public:
   zeeRobotMazeLogic(zeeArduino* arduino, unsigned long executeLength, zeeSonicSensors* sonicSensors, zeeMoveRobot* moveRobot, zeeLineReader* lineReader, long distanceForwardDetectionMm);
-  ~zeeRobotMazeLogic();
+  virtual ~zeeRobotMazeLogic();
 
   static zeeMoveRobot* SetMoveRobots(zeeArduino* arduino, zeeMoveRobot* zeeMoveRobot, zeeMotors* motors, int moveTime);
 

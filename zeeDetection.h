@@ -8,7 +8,7 @@ class zeeDetection
 {
 public:
   zeeDetection(bool lineDetected, bool obstacleForward, bool isEqual, long diffBetweenRightSensors);
-  ~zeeDetection();
+  virtual ~zeeDetection();
 
   bool GetDetectLine() { return _lineDetected; };
   bool GetObstacleForward() { return _obstacleForward; }

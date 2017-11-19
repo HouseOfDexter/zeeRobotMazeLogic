@@ -1,12 +1,6 @@
 #ifndef zeeMotorPins_h
 #define zeeMotorPins_h
 
-#if defined(ARDUINO) && ARDUINO >= 100
-#include "Arduino.h"
-#else
-#include "WProgram.h"
-#endif
-
 const int cMotorFL = 1;
 const int cMotorFR = 2;
 const int cMotorRL = 3;

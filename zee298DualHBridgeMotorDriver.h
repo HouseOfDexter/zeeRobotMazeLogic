@@ -18,7 +18,7 @@ class zee298DualHBridgeMotorDriver :
 {
 public:
   zee298DualHBridgeMotorDriver(zeeArduino* arduino, unsigned long executeLength, zeeHBridgeMDparam paramA, zeeHBridgeMDparam paramB);
-  ~zee298DualHBridgeMotorDriver();
+  virtual ~zee298DualHBridgeMotorDriver();
 
   void EnableMotors();
   void DisableMotors();

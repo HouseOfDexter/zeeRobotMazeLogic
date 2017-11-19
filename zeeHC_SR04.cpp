@@ -12,6 +12,10 @@ zeeHCSR04param::zeeHCSR04param(unsigned int echoPin, unsigned int triggerPin, in
   Offset = offset;
 }
 
+zeeHCSR04param::~zeeHCSR04param()
+{
+}
+
 zeeHC_SR04_Sensor::zeeHC_SR04_Sensor(zeeArduino* arduino, unsigned long executeLength, zeeHCSR04param param)
   : zeeExecute(arduino, executeLength)
 {
@@ -20,8 +24,8 @@ zeeHC_SR04_Sensor::zeeHC_SR04_Sensor(zeeArduino* arduino, unsigned long executeL
   _measureSamples = param.MeasureSamples;
   _measureSampleDelay = param.MeasureSampleDelay;  
   _offset = param.Offset;
-  pinMode(_triggerPin, OUTPUT);
-  pinMode(_echoPin, INPUT);
+  arduino->pinMode(_triggerPin, OUTPUT);
+  arduino->pinMode(_echoPin, INPUT);
 }
 
 zeeHC_SR04_Sensor::~zeeHC_SR04_Sensor()
@@ -37,7 +41,7 @@ long zeeHC_SR04_Sensor::GetDistanceMm()
   {
     /*We delay taking a reading if not the first reading*/
     if (_measureSamples > 1)
-      delay(_measureSampleDelay);
+      _arduino->delay(_measureSampleDelay);
     DoExecute();
     measureSum += GetSingleDistanceMm();
   }

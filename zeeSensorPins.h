@@ -1,10 +1,5 @@
 #ifndef zeeSensorPins_h
 #define zeeSensorPins_h
-#if ARDUINO >= 100
-#include "Arduino.h"
-#else
-#include "WProgram.h"
-#endif
 
 const unsigned int baseUS = 8;
 

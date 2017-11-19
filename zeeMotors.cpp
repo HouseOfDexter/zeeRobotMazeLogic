@@ -6,5 +6,9 @@ zeeMotors::zeeMotors(zeeArduino * arduino, unsigned long executeLength)
 {
 }
 
+zeeMotors::~zeeMotors()
+{
+}
+
 
 

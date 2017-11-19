@@ -9,6 +9,10 @@ zeeSSParam::zeeSSParam(zeeHC_SR04_Sensor * frontSensor, zeeHC_SR04_Sensor * righ
   DistanceForwardDetectionMm = distanceForwardDetectionMm;
 }
 
+zeeSSParam::~zeeSSParam()
+{
+}
+
 zeeSonicSensors::zeeSonicSensors(zeeArduino* arduino, unsigned long executeLength, zeeSSParam param)
   :zeeExecute(arduino, executeLength)
 {

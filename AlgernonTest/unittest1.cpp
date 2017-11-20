@@ -1,20 +1,17 @@
 #include "stdafx.h"
 #include "CppUnitTest.h"
-#include "..\zeeExecute.h"
-#include "gmock/gmock.h"
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
 namespace AlgernonTest
 {		
-	TEST_CLASS(zeeExecuteTest)
+	TEST_CLASS(UnitTest1)
 	{
 	public:
 		
-		TEST_METHOD(Execute)
+		TEST_METHOD(TestMethod1)
 		{
-      int value = 42;
-      Assert::AreEqual(42, value);
+			// TODO: Your test code here
 		}
 
 	};

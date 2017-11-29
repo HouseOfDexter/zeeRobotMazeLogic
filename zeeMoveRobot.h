@@ -182,6 +182,6 @@ private:
 class zeeMotorFactory
 {
 public:
-  static zeeMoveRobot* SetMoveRobots(zeeArduino* arduino, zeeMoveRobot* zeeMoveRobot, zeeMotors* motors, int moveTime);
+  static zeeMoveRobot* SetMoveRobots(zeeArduino* arduino, zeeMoveRobot* zeeMoveRobot, zeeMotors* motors, zeeDetector* detector, int moveTime);
 };
 #endif

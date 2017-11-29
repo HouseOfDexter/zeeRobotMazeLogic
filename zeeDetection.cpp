@@ -11,11 +11,13 @@ zeeDetection::~zeeDetection()
 
 /************************************************************************************/
 
-zeeDetector::zeeDetector(zeeSonicSensors * sonicSensors, zeeLineReader * lineReader, long distanceForwardDetectionMm)
+zeeDetector::zeeDetector(zeeArduino* arduino, zeeSonicSensors * sonicSensors, zeeLineReader * lineReader, long distanceForwardDetectionMm)
 {
+  _arduino = arduino;
   _sonicSensors = sonicSensors;  
   _lineReader = lineReader;
   _distanceForwardDetectionMm = distanceForwardDetectionMm;
+
 }
 
 zeeDetection zeeDetector::GetDetection()

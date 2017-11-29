@@ -392,6 +392,8 @@ zeeDetectorRobot::~zeeDetectorRobot()
 
 bool zeeDetectorRobot::Handle(zeeDetection detection, bool isFinished, bool handled)
 {
+  detection = _detector->GetDetection();
+  CallNextRobot(detection, detection.GetDetectLine(), false);
   return false;
 }
 
@@ -410,7 +412,7 @@ bool zeeDetectorRobot::IsHandled()
 }
 
 /************************************************************************************/
-zeeMoveRobot * zeeMotorFactory::SetMoveRobots(zeeArduino * arduino, zeeMoveRobot * zeeMoveRobot, zeeMotors * motors, int moveTime)
+zeeMoveRobot * zeeMotorFactory::SetMoveRobots(zeeArduino * arduino, zeeMoveRobot * zeeMoveRobot, zeeMotors * motors, zeeDetector* detector, int moveTime)
 {
   //zeeDecoratorTestLed *ledDecorator = new zeeDecoratorTestLed(moveTime, NULL, onOffLed);
 
@@ -420,7 +422,8 @@ zeeMoveRobot * zeeMotorFactory::SetMoveRobots(zeeArduino * arduino, zeeMoveRobot
   zeeTurnLeft* turnLeft = new zeeTurnLeft(arduino, moveTime - cSmallTurnTime, stop, motors);
   zeeTurnRight* turnRight = new zeeTurnRight(arduino, moveTime - cSmallTurnTime, turnLeft, motors);
   zeeGoStraight* straight = new zeeGoStraight(arduino, moveTime, turnRight, motors);
-  zeeSmallTurnLeft* smallTurnLeft = new zeeSmallTurnLeft(arduino, cSmallTurnTime, straight, motors);
+  zeeDetectorRobot* detectorRobot = new zeeDetectorRobot(detector->GetArduino(), 0, straight, detector);
+  zeeSmallTurnLeft* smallTurnLeft = new zeeSmallTurnLeft(arduino, cSmallTurnTime, detectorRobot, motors);
   zeeSmallTurnRight* smallTurnRight = new zeeSmallTurnRight(arduino, cSmallTurnTime, smallTurnLeft, motors);
   zeeGoCoast* coast = new zeeGoCoast(arduino, cSmallTurnTime, smallTurnRight, motors);
 

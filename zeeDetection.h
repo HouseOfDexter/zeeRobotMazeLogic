@@ -29,13 +29,14 @@ private:
 class zeeDetector
 {
 public:
-  zeeDetector(zeeSonicSensors* sonicSensors, zeeLineReader* lineReader, long distanceForwardDetectionMm);
+  zeeDetector(zeeArduino* arduino, zeeSonicSensors* sonicSensors, zeeLineReader* lineReader, long distanceForwardDetectionMm);
   zeeDetection GetDetection();
   bool ObstacleForward();
   void Execute();
+  zeeArduino* GetArduino() { return _arduino; }
 private:
-  zeeSonicSensors* _sonicSensors;
-  
+  zeeArduino* _arduino;
+  zeeSonicSensors* _sonicSensors;  
   zeeLineReader* _lineReader;
   long _distanceForwardDetectionMm;
 };

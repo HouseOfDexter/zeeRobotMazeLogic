@@ -45,42 +45,42 @@ void zee298DualHBridgeMotorDriver::DisableMotors()
   MotorBOff();
 }
 
-void zee298DualHBridgeMotorDriver::Forward()
+void zee298DualHBridgeMotorDriver::Forward(unsigned int duration = 0)
 {
   MotorAForward();
   MotorBForward();
   Execute();
 }
 
-void zee298DualHBridgeMotorDriver::Backward()
+void zee298DualHBridgeMotorDriver::Backward(unsigned int duration = 0)
 {
   MotorABackward();
   MotorBBackward();
   Execute();
 }
 
-void zee298DualHBridgeMotorDriver::TurnLeft()
+void zee298DualHBridgeMotorDriver::TurnLeft(unsigned int duration = 0)
 {
   MotorABackward();
   MotorBForward();
   Execute();
 }
 
-void zee298DualHBridgeMotorDriver::TurnRight()
+void zee298DualHBridgeMotorDriver::TurnRight(unsigned int duration = 0)
 {
   MotorAForward();
   MotorBBackward();  
   Execute();
 }
 
-void zee298DualHBridgeMotorDriver::Coast()
+void zee298DualHBridgeMotorDriver::Coast(unsigned int duration = 0)
 {
   MotorACoast();
   MotorBCoast();
   Execute();
 }
 
-void zee298DualHBridgeMotorDriver::Brake()
+void zee298DualHBridgeMotorDriver::Brake(unsigned int duration = 0)
 {
   MotorABrake();
   MotorBBrake();

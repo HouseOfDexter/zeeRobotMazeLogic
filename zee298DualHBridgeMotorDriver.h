@@ -23,12 +23,12 @@ public:
   void EnableMotors();
   void DisableMotors();
 
-  void Forward();
-  void Backward();
-  void TurnLeft();
-  void TurnRight();
-  void Coast();
-  void Brake();
+  void Forward(unsigned int duration = 0);
+  void Backward(unsigned int duration = 0);
+  void TurnLeft(unsigned int duration = 0);
+  void TurnRight(unsigned int duration = 0);
+  void Coast(unsigned int duration = 0);
+  void Brake(unsigned int duration = 0);
 protected:
   void DoExecute();
   void DoMotor(unsigned int pin, unsigned int direction);

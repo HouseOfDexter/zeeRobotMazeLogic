@@ -1,3 +1,4 @@
+#define ArduinoProg
 #include "zeeArduino.h"
 #include "zeeMotorPins.h"
 #include "zeeHC_SR04.h"
@@ -29,21 +30,23 @@ void loop()
   zeeArduino* arduino = new zeeArduino(cUpdateInterval, cIntervalRunTime);
   //we create another fascade for the leds because they update at a different interval
   zeeArduino* ledarduino = new zeeArduino(cLedUpdateInterval, cIntervalRunTime);
+  zeeArduino* nowait = new zeeArduino(0, 0);
   unsigned int aleds[3] = { cLedPin1, cLedPin2, cLedPin3};
   zeeStateLED* leds = new zeeStateLED(ledarduino, aleds, 3);
-  zeeHC_SR04_Sensor* f_sr04 = new zeeHC_SR04_Sensor(arduino, cUpdateInterval, zeeHCSR04param(cEchoForwardPin, cTrigForwardPin,  cMeasureSamples, cSampleMeasurementDelay));
-  zeeHC_SR04_Sensor* rf_sr04 = new zeeHC_SR04_Sensor(arduino, cUpdateInterval, zeeHCSR04param(cEchoRFPin, cTrigRFPin, cMeasureSamples, cSampleMeasurementDelay));
+  zeeHC_SR04_Sensor* f_sr04 = new zeeHC_SR04_Sensor(nowait, cUpdateInterval, zeeHCSR04param(cEchoForwardPin, cTrigForwardPin,  cMeasureSamples, cSampleMeasurementDelay));
+  zeeHC_SR04_Sensor* rf_sr04 = new zeeHC_SR04_Sensor(nowait, cUpdateInterval, zeeHCSR04param(cEchoRFPin, cTrigRFPin, cMeasureSamples, cSampleMeasurementDelay));
   //we have an offset, on our robot the the sonic sensors are offset by about 5mm
-  zeeHC_SR04_Sensor* rr_sr04 = new zeeHC_SR04_Sensor(arduino, cUpdateInterval, zeeHCSR04param(cEchoRRPin, cTrigRRPin, cMeasureSamples, cSampleMeasurementDelay, cSonicOffset));
-  zeeSonicSensors* sonicSensors = new zeeSonicSensors(arduino, cUpdateInterval, zeeSSParam(f_sr04, rf_sr04, rr_sr04, cSonicSlop, cDistanceForwardDetection));
-  zeeLineReader* lineReader = new zeeLineReader(arduino, cMoveTime, cLineReaderRPin, cLineReaderMPin, cLineReaderLPin);
+  zeeHC_SR04_Sensor* rr_sr04 = new zeeHC_SR04_Sensor(nowait, cUpdateInterval, zeeHCSR04param(cEchoRRPin, cTrigRRPin, cMeasureSamples, cSampleMeasurementDelay, cSonicOffset));
+  zeeSonicSensors* sonicSensors = new zeeSonicSensors(nowait, cUpdateInterval, zeeSSParam(f_sr04, rf_sr04, rr_sr04, cSonicSlop, cDistanceForwardDetection));
+  zeeLineReader* lineReader = new zeeLineReader(nowait, cMoveTime, cLineReaderRPin, cLineReaderMPin, cLineReaderLPin);
   //we don't need to clean up the decorators as they will be cleaned up in the destructor of zeeMoveRobot as one of the chained Robots
   zeeDecoratorLed* ledDecorator = new zeeDecoratorLed(ledarduino, cMoveTime, NULL, leds);
   zeeDecoratorPrintLn* printDecorator = new zeeDecoratorPrintLn(ledarduino, cMoveTime, ledDecorator);
 
   zee298DualHBridgeMotorDriver* motors = new zee298DualHBridgeMotorDriver(arduino, cMoveTime, zeeHBridgeMDparam(cMotorEnaPinA, cMotorIn1PinA, cMotorIn2PinA), zeeHBridgeMDparam(cMotorEnaPinB, cMotorIn1PinA, cMotorIn2PinB));
-  zeeMoveRobot* moveRobot = zeeRobotMazeLogic::SetMoveRobots(arduino, printDecorator, motors, cMoveTime);
-  zeeRobotMazeLogic* mazeLogic = new zeeRobotMazeLogic(arduino, cMoveTime, sonicSensors, moveRobot, lineReader, cDistanceForwardDetection);
+  zeeMoveRobot* moveRobot = zeeMotorFactory::SetMoveRobots(arduino, printDecorator, motors, cMoveTime);
+  zeeDetector* detector = new zeeDetector(sonicSensors, lineReader, cDistanceForwardDetection);
+  zeeRobotMazeLogic* mazeLogic = new zeeRobotMazeLogic(arduino, cMoveTime, moveRobot, detector);
   
   //we sit in a loop until we are finished
   //note mazeLogic use the linereader to find the finish line
@@ -58,10 +61,12 @@ void loop()
   delete rf_sr04;
   delete rr_sr04;
   delete sonicSensors;
+  delete lineReader;
   delete motors;
   delete moveRobot;
-  delete mazeLogic;
-  delete lineReader;
-
-  delete motors;
+  delete mazeLogic;     
+  delete detector;
+  delete arduino;
+  delete ledarduino;
+  delete nowait;
 }

@@ -10,5 +10,14 @@ zeeMotors::~zeeMotors()
 {
 }
 
+void zeeMotors::SetEnabled(bool enabled)
+{
+  _enabled = enabled;
+}
+
+bool zeeMotors::GetEnabled() 
+{
+  return _enabled;
+}
 
 

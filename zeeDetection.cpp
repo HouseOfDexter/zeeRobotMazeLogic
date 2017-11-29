@@ -8,3 +8,33 @@ zeeDetection::zeeDetection(bool lineDetected, bool obstacleForward, bool isEqual
 zeeDetection::~zeeDetection()
 {
 }
+
+/************************************************************************************/
+
+zeeDetector::zeeDetector(zeeSonicSensors * sonicSensors, zeeLineReader * lineReader, long distanceForwardDetectionMm)
+{
+  _sonicSensors = sonicSensors;  
+  _lineReader = lineReader;
+  _distanceForwardDetectionMm = distanceForwardDetectionMm;
+}
+
+zeeDetection zeeDetector::GetDetection()
+{
+  long differenceBetweenRightSensors = _sonicSensors->DifferenceBetweenRightSensorsInMM();
+  bool isEqual = _sonicSensors->IsEqual();
+  bool obstacleForward = _sonicSensors->ObstacleForward();
+  bool detectLine = _lineReader->DetectLeft() && _lineReader->DetectMiddle() && _lineReader->DetectRight();
+
+  return zeeDetection(detectLine, obstacleForward, isEqual, differenceBetweenRightSensors);
+}
+
+bool zeeDetector::ObstacleForward()
+{
+  return _sonicSensors->ObstacleForward();
+}
+
+void zeeDetector::Execute()
+{
+  _lineReader->Execute();
+  _sonicSensors->Execute();
+}

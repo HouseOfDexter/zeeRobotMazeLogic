@@ -5,7 +5,7 @@
 
 
 /************************************************************************************/
-
+/*Abstract class with interface to move the robot*/
 class zeeMotors : public zeeExecute
 {
 public:
@@ -15,12 +15,17 @@ public:
   virtual void EnableMotors() = 0;
   virtual void DisableMotors() = 0;
 
-  virtual void Forward() = 0;
-  virtual void Backward() = 0;
-  virtual void TurnLeft() = 0;
-  virtual void TurnRight() = 0;
-  virtual void Coast() = 0;
-  virtual void Brake() = 0;
+  virtual void Forward(unsigned int duration = 0) = 0;
+  virtual void Backward(unsigned int duration = 0) = 0;
+  virtual void TurnLeft(unsigned int duration = 0) = 0;
+  virtual void TurnRight(unsigned int duration = 0) = 0;
+  virtual void Coast(unsigned int duration = 0) = 0;
+  virtual void Brake(unsigned int duration = 0) = 0;
+  void SetEnabled(bool enabled);
+  bool GetEnabled();
+private:
+  bool _enabled;
+
 };
 
 #endif

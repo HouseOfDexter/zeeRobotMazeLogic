@@ -15,4 +15,7 @@ const int cMotorEnaPinB = 7;
 const int cMotorIn1PinB = 6;
 const int cMotorIn2PinB = 5;
 
+
+const int cSmallTurnTime = 50;
+const int cBreakTime = 100;
 #endif

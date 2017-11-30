@@ -38,3 +38,4 @@ private:
   long _distance;
 };
 #endif
+

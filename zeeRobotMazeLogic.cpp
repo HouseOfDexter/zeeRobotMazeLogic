@@ -16,12 +16,13 @@ zeeRobotMazeLogic::~zeeRobotMazeLogic()
 
 void zeeRobotMazeLogic::AfterExecute()
 {  
+  _arduino->println("zeeRobotMazeLogic::AfterExecute");
   zeeDetection detection = _detector->GetDetection();
   _isFinished = detection.GetDetectLine();
   unsigned int robots = 0;
   robots = _moveRobot->Handle(detection, _isFinished, false, robots);
   String robotStr = zeeMotorFactory::GetRobotString(robots);
-  _arduino->println(robotStr);
+  _arduino->println("RobotStr: " + robotStr);
 }
 
 bool zeeRobotMazeLogic::IsFinished()
@@ -33,5 +34,6 @@ void zeeRobotMazeLogic::DoExecute()
 {
   _detector->Execute();
 }
+
 
 

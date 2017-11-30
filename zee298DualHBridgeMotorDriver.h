@@ -56,3 +56,4 @@ private:
   unsigned int _pinB2;
 };
 #endif
+

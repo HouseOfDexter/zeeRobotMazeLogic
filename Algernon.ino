@@ -50,6 +50,10 @@ void loop()
   //note mazeLogic use the linereader to find the finish line
   while (!mazeLogic->IsFinished())
   {
+    Serial.println("main loop");
+    int loopcnt = 1;
+    Serial.print(loopcnt++);
+    Serial.print("");
     mazeLogic->Execute();
     mazeLogic->AfterExecute();
   }
@@ -68,3 +72,4 @@ void loop()
   delete ledarduino;
   delete nowait;
 }
+

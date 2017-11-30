@@ -61,7 +61,7 @@ void zeeHC_SR04_Sensor::DoExecute()
   long duration, distance;
   //we turn on the UltraSonic_pulse
   _arduino->digitalWrite(_triggerPin, HIGH);
-  //wait for 11 µs
+  //wait for 11 Âµs
   _arduino->delayMicroseconds(11);
   //we turn off the UltraSonic_pulse
   _arduino->digitalWrite(_triggerPin, LOW);
@@ -69,4 +69,5 @@ void zeeHC_SR04_Sensor::DoExecute()
   duration = _arduino->pulseIn(_echoPin, HIGH);
   _distance = (long)(((float)duration / cUSo) * 10.0);
 }
+
 

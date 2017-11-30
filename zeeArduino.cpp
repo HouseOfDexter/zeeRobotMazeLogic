@@ -61,7 +61,9 @@ void zeeArduino::print(long value)
   Serial.print(value);
 }
 
+
 void zeeArduino::print(bool value)
 {
   Serial.print(value);
 }
+

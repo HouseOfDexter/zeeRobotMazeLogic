@@ -82,6 +82,7 @@ void zee298DualHBridgeMotorDriver::Coast(unsigned int duration = 0)
 
 void zee298DualHBridgeMotorDriver::Brake(unsigned int duration = 0)
 {
+  _arduino->println("zee298DualHBridgeMotorDriver::Brake");
   MotorABrake();
   MotorBBrake();
   Execute();
@@ -161,3 +162,4 @@ void zee298DualHBridgeMotorDriver::MotorBBrake()
 {
   DoMotor(_pinB1, HIGH, _pinB2, HIGH);
 }
+

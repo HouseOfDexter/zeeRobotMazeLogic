@@ -167,8 +167,7 @@ protected:
   bool ShouldHandle(zeeDetection detection, bool isFinished, bool handled);
   void DoExecute();
   bool IsHandled() override;
-private:
-  zeeArduino* _arduino;
+private:  
   zeeStateLED* _leds;
   void FlashLeds();
   void SetLeds(bool setOn);
@@ -212,3 +211,4 @@ public:
   static String GetRobotString(unsigned int id);
 };
 #endif
+

@@ -41,3 +41,4 @@ private:
   long _distanceForwardDetectionMm;
 };
 #endif
+

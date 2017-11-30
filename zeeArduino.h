@@ -1,6 +1,8 @@
 #ifndef zeeArduino_h
 #define zeeArduino_h
 
+#include "WString.h"
+
 #define HIGH 0x1
 #define LOW  0x0
 
@@ -29,6 +31,11 @@ public:
   unsigned int GetIntervalRunTime() { return _intervalRunTime; }
 
   void pinMode(unsigned int pin, unsigned int direction);
+
+  void println(String value);
+  void print(long value);
+  void print(bool value);
+
 private:
   unsigned int _updateInterval;
   unsigned int _intervalRunTime;

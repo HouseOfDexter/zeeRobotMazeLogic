@@ -50,3 +50,18 @@ void zeeArduino::pinMode(unsigned int pin, unsigned int direction)
 {
   Arduino_h::pinMode((uint8_t)pin, (uint8_t)direction);
 }
+
+void zeeArduino::println(String value)
+{
+  Serial.println(value);
+}
+
+void zeeArduino::print(long value)
+{ 
+  Serial.print(value);
+}
+
+void zeeArduino::print(bool value)
+{
+  Serial.print(value);
+}

@@ -20,16 +20,17 @@ zeeMoveRobot::~zeeMoveRobot()
     delete _robot;
 }
 
-bool zeeMoveRobot::Handle(zeeDetection detection, bool isFinished, bool handled)
+unsigned int zeeMoveRobot::Handle(zeeDetection detection, bool isFinished, bool handled, unsigned int &robots)
 {  
   if (ShouldHandle(detection, isFinished, handled))
   {
     Execute();
     handled = IsHandled();
+    robots = GetId();
   }
-  CallNextRobot(detection, isFinished, handled);
+  robots = CallNextRobot(detection, isFinished, handled, robots);
 
-  return handled;
+  return robots;
 }
 
 unsigned int zeeMoveRobot::GetMoveTime()
@@ -42,12 +43,13 @@ zeeMoveRobot * zeeMoveRobot::GetRobot()
   return _robot;
 }
 
-void zeeMoveRobot::CallNextRobot(zeeDetection detection, bool isFinished, bool handled)
+unsigned int zeeMoveRobot::CallNextRobot(zeeDetection detection, bool isFinished, bool handled, unsigned int &robots)
 {
   //we call our chained robot to see if it needs to handle the request
   zeeMoveRobot* nextRobot = GetRobot();
   if (nextRobot != NULL)
-    nextRobot->Handle(detection, isFinished, handled);
+    robots = nextRobot->Handle(detection, isFinished, handled, robots);
+  return robots;
 }
 
 bool zeeMoveRobot::IsHandled()
@@ -68,7 +70,7 @@ zeeDecoratorLed::~zeeDecoratorLed()
 {
 }
 
-bool zeeDecoratorLed::Handle(zeeDetection detection, bool isFinished, bool handled)
+unsigned int zeeDecoratorLed::Handle(zeeDetection detection, bool isFinished, bool handled, unsigned int &robots)
 {
   if (!isFinished)
   {
@@ -83,8 +85,9 @@ bool zeeDecoratorLed::Handle(zeeDetection detection, bool isFinished, bool handl
     //maybe introduce a callback function that allows a chance to breakout?
     FlashLeds();
   }
-  CallNextRobot(detection, isFinished, handled);
-  return handled;
+  robots = robots | GetId();
+  robots = CallNextRobot(detection, isFinished, handled, robots);
+  return robots;
 }
 
 void zeeDecoratorLed::FlashLeds()
@@ -339,29 +342,16 @@ zeeDecoratorPrintLn::~zeeDecoratorPrintLn()
 {
 }
 
-bool zeeDecoratorPrintLn::Handle(zeeDetection detection, bool isFinished, bool handled)
+unsigned int zeeDecoratorPrintLn::Handle(zeeDetection detection, bool isFinished, bool handled, unsigned int &robots)
 {
   Print("ObstacleForward: ", detection.GetObstacleForward(), "");
   Print("IsEqual: ", detection.GetIsEqual(), "");
   Print("DetectLine: ", detection.GetDetectLine(), "");
   Print("DiffBetweenRightSensors: ", detection.GetDiffBetweenRightSensors(), "mm");
+  robots = robots | GetId();
 
-  CallNextRobot(detection, isFinished, handled);
-  return handled;
-}
-
-void zeeDecoratorPrintLn::Print(char description[], long value, char extension[])
-{
-  //Serial.println(description);
-  //Serial.print(value);
-  //Serial.println(extension);
-}
-
-void zeeDecoratorPrintLn::Print(char description[], bool value, char extension[])
-{
-  //Serial.println(description);
-  //Serial.print(value);
-  //Serial.println(extension);
+  robots = CallNextRobot(detection, isFinished, handled, robots);
+  return robots;
 }
 
 bool zeeDecoratorPrintLn::IsHandled()
@@ -378,6 +368,20 @@ bool zeeDecoratorPrintLn::ShouldHandle(zeeDetection detection, bool isFinished, 
   return true;
 }
 
+void zeeDecoratorPrintLn::Print(String description, long value, String extension)
+{
+  _arduino->println(description);
+  _arduino->print(value);
+  _arduino->println(extension);
+}
+
+void zeeDecoratorPrintLn::Print(String description, bool value, String extension)
+{
+  _arduino->println(description);
+  _arduino->print(value);
+  _arduino->println(extension);
+}
+
 /************************************************************************************/
 
 zeeDetectorRobot::zeeDetectorRobot(zeeArduino * arduino, int moveTime, zeeMoveRobot * robot, zeeDetector * detector)
@@ -390,10 +394,11 @@ zeeDetectorRobot::~zeeDetectorRobot()
 {
 }
 
-bool zeeDetectorRobot::Handle(zeeDetection detection, bool isFinished, bool handled)
+unsigned int zeeDetectorRobot::Handle(zeeDetection detection, bool isFinished, bool handled, unsigned int &robots)
 {
   detection = _detector->GetDetection();
-  CallNextRobot(detection, detection.GetDetectLine(), false);
+  robots = robots | GetId();
+  robots = CallNextRobot(detection, detection.GetDetectLine(), false, robots);
   return false;
 }
 
@@ -433,4 +438,50 @@ zeeMoveRobot * zeeMotorFactory::SetMoveRobots(zeeArduino * arduino, zeeMoveRobot
   returned and then delete called when it needs to be cleaned up.
   */
   return start;
+}
+
+/*
+const int cTurnRight = 1;
+const int cTurnLeft = 2;
+const int cSmallTurnRight = 4;
+const int cSmallTurnLeft = 8;
+const int cGoStraight = 16;
+const int cGoCoast = 32;
+const int cStop = 64;
+const int cStart = 128;
+const int cFinished = 256;
+const int cDecoratorLed = 512;
+const int cDecoratorPrintLn = 1024;
+const int cDetectorRobot = 2048;
+*/
+String zeeMotorFactory::GetRobotString(unsigned int id)
+{
+  String robots = "";
+
+  if (id & cTurnRight == cTurnRight)
+    robots = robots + "Turn Right ";
+  if (id & cTurnLeft == cTurnLeft)
+    robots = robots + "Turn Left ";
+  if (id & cSmallTurnRight == cSmallTurnRight)
+    robots = robots + "Small Turn Right ";
+  if (id & cSmallTurnLeft == cSmallTurnLeft)
+    robots = robots + "Small Turn Left ";
+
+  if (id & cGoStraight == cGoStraight)
+    robots = robots + "Go Straight ";
+  if (id & cGoCoast == cGoCoast)
+    robots = robots + "Go Coast ";
+  if (id & cStop == cStop)
+    robots = robots + "Stop ";
+  if (id & cStart == cStart)
+    robots = robots + "Start ";
+  if (id & cFinished == cFinished)
+    robots = robots + "Finished ";
+  if (id & cDecoratorLed == cDecoratorLed)
+    robots = robots + "Decorator Led ";
+  if (id & cDecoratorPrintLn == cDecoratorPrintLn)
+    robots = robots + "Decorator Print Ln ";
+  if (id & cDetectorRobot == cDetectorRobot)
+    robots = robots + "Detector Robot ";
+  return robots;
 }

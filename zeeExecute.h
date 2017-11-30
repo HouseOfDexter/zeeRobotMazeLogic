@@ -13,6 +13,7 @@ public:
 
   void Execute();
   bool IsExecuting() { return _isExecuting; }
+  zeeArduino* GetArduino() { return _arduino; }
 protected:
   virtual void DoExecute() = 0;
   void SetIsExecuting(bool value) { _isExecuting = value; }  

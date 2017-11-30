@@ -19,7 +19,7 @@ protected:
 private:
   zeeMoveRobot* _moveRobot;
   zeeDetector* _detector;
-  bool _isFinished = false;
+  bool _isFinished = false;  
 };
 
 #endif

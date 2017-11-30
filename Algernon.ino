@@ -19,9 +19,6 @@ const unsigned int cDistanceForwardDetection = 50;
 
 void setup() {
   Serial.begin(9600);
-
-  pinMode(cLedPin1, OUTPUT);
-  pinMode(cLedPin2, OUTPUT);
 }
 
 void loop()

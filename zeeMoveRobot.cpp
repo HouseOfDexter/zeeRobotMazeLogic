@@ -335,60 +335,60 @@ bool zeeSmallTurnRight::ShouldHandle(zeeDetection detection, bool isFinished, bo
 
 /************************************************************************************/
 
-zeeDecoratorPrintLn::zeeDecoratorPrintLn(zeeArduino * arduino, int moveTime, zeeMoveRobot* robot)
-  : zeeMoveRobot(arduino, moveTime, robot, NULL)
-{
-}
-
-zeeDecoratorPrintLn::~zeeDecoratorPrintLn()
-{
-}
-
-unsigned int zeeDecoratorPrintLn::Handle(zeeDetection detection, bool isFinished, bool handled, unsigned int &robots)
-{
-  _arduino->Println("OF");
-  _arduino->Print(detection.GetObstacleForward());
-  _arduino->Println(" ");
-  _arduino->Println("Equal");
-  _arduino->Print(detection.GetIsEqual());
-  _arduino->Println(" ");
-  _arduino->Println("diff");
-  _arduino->Print(detection.GetDiffBetweenRightSensors());
-  _arduino->Println("mm");
-
-  robots = robots | GetId();
-
-  robots = CallNextRobot(detection, isFinished, handled, robots);
-  return robots;
-}
-
-bool zeeDecoratorPrintLn::IsHandled()
-{
-  return false;
-}
-
-void zeeDecoratorPrintLn::DoExecute()
-{ 
-}
-
-bool zeeDecoratorPrintLn::ShouldHandle(zeeDetection detection, bool isFinished, bool handled)
-{
-  return true;
-}
-
-void zeeDecoratorPrintLn::Print(const String &description, long value, const String &extension)
-{
-  _arduino->Println(description);
-  _arduino->Print(value);
-  _arduino->Println(extension);
-}
-
-void zeeDecoratorPrintLn::Print(const String &description, bool value, const String &extension)
-{
-  _arduino->Println(description);
-  _arduino->Print(value);
-  _arduino->Println(extension);
-}
+//zeeDecoratorPrintLn::zeeDecoratorPrintLn(zeeArduino* arduino, int moveTime, zeeMoveRobot* robot, zeeMotors* motors)
+//  : zeeMoveRobot(arduino, moveTime, robot, motors)
+//{
+//}
+//
+//zeeDecoratorPrintLn::~zeeDecoratorPrintLn()
+//{
+//}
+//
+//unsigned int zeeDecoratorPrintLn::Handle(zeeDetection detection, bool isFinished, bool handled, unsigned int &robots)
+//{
+//  robots = robots | GetId();
+//  _detection = detection;
+//
+//  robots = CallNextRobot(detection, isFinished, handled, robots);
+//  return robots;
+//}
+//
+//bool zeeDecoratorPrintLn::IsHandled()
+//{
+//  return false;
+//}
+//
+//void zeeDecoratorPrintLn::DoExecute()
+//{ 
+//  _arduino->Println("OF");
+//  _arduino->Print(_detection.GetObstacleForward());
+//  _arduino->Println(" ");
+//  _arduino->Println("Equal");
+//  _arduino->Print(_detection.GetIsEqual());
+//  _arduino->Println(" ");
+//  _arduino->Println("diff");
+//  _arduino->Print(_detection.GetDiffBetweenRightSensors());
+//  _arduino->Println("mm");
+//}
+//
+//bool zeeDecoratorPrintLn::ShouldHandle(zeeDetection detection, bool isFinished, bool handled)
+//{
+//  return true;
+//}
+//
+//void zeeDecoratorPrintLn::Print(const String &description, long value, const String &extension)
+//{
+//  _arduino->Println(description);
+//  _arduino->Print(value);
+//  _arduino->Println(extension);
+//}
+//
+//void zeeDecoratorPrintLn::Print(const String &description, bool value, const String &extension)
+//{
+//  _arduino->Println(description);
+//  _arduino->Print(value);
+//  _arduino->Println(extension);
+//}
 
 /************************************************************************************/
 

@@ -38,8 +38,8 @@ private:
   int _measureSamples = cMeasureSamples; //how many samples to read and take average of the readings
   int _measureSampleDelay = cSampleMeasurementDelay; //in ms
   
-  unsigned int _offset;
-  long _distance;
+  unsigned int _offset = 0;
+  long _distance = 0;
 };
 #endif
 

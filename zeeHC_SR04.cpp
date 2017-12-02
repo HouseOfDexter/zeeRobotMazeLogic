@@ -24,8 +24,10 @@ zeeHC_SR04_Sensor::zeeHC_SR04_Sensor(zeeArduino* arduino, unsigned long executeL
   _measureSamples = param.MeasureSamples;
   _measureSampleDelay = param.MeasureSampleDelay;  
   _offset = param.Offset;
-  arduino->PinMode(_triggerPin, OUTPUT);
-  arduino->PinMode(_echoPin, INPUT);
+  //arduino->PinMode(_triggerPin, OUTPUT);
+  //arduino->PinMode(_echoPin, INPUT);
+  pinMode(_triggerPin, OUTPUT);
+  pinMode(_echoPin, INPUT);
 }
 
 zeeHC_SR04_Sensor::~zeeHC_SR04_Sensor()

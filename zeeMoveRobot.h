@@ -175,20 +175,22 @@ private:
 };
 
 /************************************************************************************/
-class zeeDecoratorPrintLn : public zeeMoveRobot
-{
-public:
-  zeeDecoratorPrintLn(zeeArduino* arduino, int moveTime, zeeMoveRobot* robot);
-  virtual ~zeeDecoratorPrintLn();
-  unsigned int Handle(zeeDetection detection, bool isFinished, bool handled, unsigned int &robots) override;
-  unsigned int GetId() { return cDecoratorPrintLn; }
-protected:
-  void DoExecute();
-  bool ShouldHandle(zeeDetection detection, bool isFinished, bool handled);
-  void Print(const String &description, long value, const String &extension);
-  void Print(const String &description, bool value, const String &extension);
-  bool IsHandled() override;
-};
+//class zeeDecoratorPrintLn : public zeeMoveRobot
+//{
+//public:
+//  zeeDecoratorPrintLn(zeeArduino* arduino, int moveTime, zeeMoveRobot* robot, zeeMotors* motors);
+//  virtual ~zeeDecoratorPrintLn();
+//  unsigned int Handle(zeeDetection detection, bool isFinished, bool handled, unsigned int &robots) override;
+//  unsigned int GetId() { return cDecoratorPrintLn; }
+//protected:
+//  void DoExecute();
+//  bool ShouldHandle(zeeDetection detection, bool isFinished, bool handled);
+//  void Print(const String &description, long value, const String &extension);
+//  void Print(const String &description, bool value, const String &extension);
+//  bool IsHandled() override;
+//private:
+//  zeeDetection _detection;
+//};
 /************************************************************************************/
 class zeeDetectorRobot : public zeeMoveRobot 
 {

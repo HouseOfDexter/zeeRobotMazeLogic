@@ -40,17 +40,17 @@ bool zeeSonicSensors::IsEqual()
 
 long zeeSonicSensors::DifferenceBetweenRightSensorsInMM()
 {
-  long diff = 0;
-  if (!IsExecuting())
+  long diff = cMaxLong;
+  if (!IsExecuting() && _rightFrontDistance != cMaxLong && _rightRearDistance != cMaxLong)
     diff = _rightFrontDistance - _rightRearDistance;
   return diff;
 }
 
 void zeeSonicSensors::DoExecute()
 {
-  _frontSensor->Execute();
-  _rightFrontSensor->Execute();
-  _rightRearSensor->Execute();
+  _frontSensor->Execute(true);
+  _rightFrontSensor->Execute(true);
+  _rightRearSensor->Execute(true);
   //front sensor
   _frontDistance = _frontSensor->GetDistanceMm();
   //right forward sensor

@@ -25,7 +25,7 @@ void zeeArduino::DelayMicroseconds(unsigned int us)
 
 unsigned long zeeArduino::PulseIn(unsigned int pin, unsigned int state, unsigned long timeout)
 {
-  return pulseIn((uint8_t)pin, (uint8_t)state, timeout);
+   return pulseIn((uint8_t)pin, (uint8_t)state, timeout);
 }
 
 unsigned long zeeArduino::PulseInLong(unsigned int pin, unsigned int state, unsigned long timeout)
@@ -35,12 +35,12 @@ unsigned long zeeArduino::PulseInLong(unsigned int pin, unsigned int state, unsi
 
 void zeeArduino::DigitalWrite(unsigned int pin, unsigned int highlow)
 {
-  digitalWrite((uint8_t)pin, (uint8_t)highlow);
+  digitalWrite((uint8_t) pin, (uint8_t) highlow);
 }
 
 int zeeArduino::DigitalRead(unsigned int pin)
 {
-  return digitalRead((uint8_t)pin);
+  return digitalRead((uint8_t) pin);
 }
 
 unsigned long zeeArduino::Millis()
@@ -59,7 +59,7 @@ void zeeArduino::Println(const String value)
 }
 
 void zeeArduino::Print(long value)
-{
+{ 
   Serial.print(value);
 }
 

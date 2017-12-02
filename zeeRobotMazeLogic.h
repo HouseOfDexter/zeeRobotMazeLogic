@@ -1,6 +1,7 @@
 #ifndef zeeRobotMazeLogic_h
 #define zeeRobotMazeLogic_h
 
+#include "zeeArduino.h"
 #include "zeeMoveRobot.h"
 #include "zeeExecute.h"
 #include "zeeDetection.h"
@@ -12,7 +13,6 @@ public:
   virtual ~zeeRobotMazeLogic(); 
 
   void AfterExecute();
-
   bool IsFinished();
 protected:
   void DoExecute();

@@ -17,11 +17,13 @@ zeeDetector::zeeDetector(zeeArduino* arduino, zeeSonicSensors * sonicSensors, ze
   _sonicSensors = sonicSensors;  
   _lineReader = lineReader;
   _distanceForwardDetectionMm = distanceForwardDetectionMm;
-
 }
 
 zeeDetection zeeDetector::GetDetection()
 {
+  _lineReader->Execute(true);
+  _sonicSensors->Execute(true);
+
   long differenceBetweenRightSensors = _sonicSensors->DifferenceBetweenRightSensorsInMM();
   bool isEqual = _sonicSensors->IsEqual();
   bool obstacleForward = _sonicSensors->ObstacleForward();
@@ -33,11 +35,5 @@ zeeDetection zeeDetector::GetDetection()
 bool zeeDetector::ObstacleForward()
 {
   return _sonicSensors->ObstacleForward();
-}
-
-void zeeDetector::Execute()
-{
-  _lineReader->Execute();
-  _sonicSensors->Execute();
 }
 

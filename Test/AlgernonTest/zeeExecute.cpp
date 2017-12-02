@@ -15,26 +15,26 @@ void zeeExecute::Execute(bool bypassWait = false)
     _executeLength = 4294967295;
 
   unsigned long currentRunning = _arduino->Millis() - _lastUpdate;
-  unsigned long updateInterval = _arduino->GetUpdateInterval();
+  unsigned long updateInterval = _arduino->GetUpdateInterval();  
   unsigned long startExecute = _arduino->Millis();
   /*we check if the time since we last executed is greater than our wait time
   we need to run again*/
-  bool isExecuting = IsExecuting();
-  bool isPastWait = (!isExecuting && (currentRunning > updateInterval));
-
-  if (bypassWait || isExecuting || isPastWait)
-  {
-    SetIsExecuting(true);
+  bool isExecuting = IsExecuting();  
+  bool isPastWait = (!isExecuting &&(currentRunning > updateInterval));  
+  
+  if (bypassWait|| isExecuting ||isPastWait)
+  {      
+    SetIsExecuting(true);      
     DoExecute();
     _lastUpdate = _arduino->Millis();
-    _runningLength += _lastUpdate - startExecute;
-    if (_runningLength > updateInterval)
+    _runningLength += _lastUpdate - startExecute;            
+    if (_runningLength > updateInterval) 
     {
       SetIsExecuting(false);
       _runningLength = 0;
-    }
+    }    
   }
-
+  
 
 }
 

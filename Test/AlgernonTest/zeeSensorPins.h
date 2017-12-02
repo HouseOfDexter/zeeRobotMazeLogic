@@ -5,12 +5,12 @@ const unsigned int baseUS = 8;
 
 const unsigned int cEchoRFPin = baseUS + 3;//11
 const unsigned int cTrigRFPin = baseUS + 2;//10
-
 const unsigned int cEchoRRPin = baseUS + 1;//9
 const unsigned int cTrigRRPin = baseUS + 0;//8
 
-const unsigned int  cTrigForwardPin = 5;
-const unsigned int cEchoForwardPin = 4;
+
+const unsigned int  cTrigForwardPin = 4;
+const unsigned int cEchoForwardPin = 5;
 
 
 //LEDs to give us feedback

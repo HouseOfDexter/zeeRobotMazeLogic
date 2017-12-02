@@ -12,15 +12,15 @@
 
 class zeeArduino
 {
-  /*This class is a fascade around Arduino.h, allowing us to unit test around the Sensors and Motors*/
+/*This class is a fascade around Arduino.h, allowing us to unit test around the Sensors and Motors*/
 public:
   zeeArduino(unsigned int updateInterval, unsigned int intervalRunTime);
   virtual ~zeeArduino();
 
   virtual void Delay(unsigned long us);
   virtual void DelayMicroseconds(unsigned int us);
-  virtual unsigned long PulseIn(unsigned int pin, unsigned int state, unsigned long timeout = 0);
-  virtual unsigned long PulseInLong(unsigned int pin, unsigned int state, unsigned long timeout = 0);
+  virtual unsigned long PulseIn(unsigned int pin, unsigned int state, unsigned long timeout=0);
+  virtual unsigned long PulseInLong(unsigned int pin, unsigned int state, unsigned long timeout=0);
 
   virtual void DigitalWrite(unsigned int pin, unsigned int highlow);
   virtual int DigitalRead(unsigned int pin);
@@ -40,6 +40,10 @@ public:
 private:
   unsigned int _updateInterval;
   unsigned int _intervalRunTime;
+
+  
 };
 
 #endif
+
+

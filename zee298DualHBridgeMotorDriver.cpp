@@ -1,4 +1,5 @@
 #include "zee298DualHBridgeMotorDriver.h"
+#include "zeeArduino.h"
 
 zeeHBridgeMDparam::zeeHBridgeMDparam(unsigned int enablePin, unsigned int pin1, unsigned int pin2)
 {
@@ -19,13 +20,13 @@ zee298DualHBridgeMotorDriver::zee298DualHBridgeMotorDriver(zeeArduino* arduino, 
   _pinB1 = paramB.Pin1;
   _pinB2 = paramB.Pin2;
 
-  arduino->pinMode(_enableAPin, OUTPUT);
-  arduino->pinMode(_pinA1, OUTPUT);
-  arduino->pinMode(_pinA2, OUTPUT);
+  arduino->PinMode(_enableAPin, OUTPUT);
+  arduino->PinMode(_pinA1, OUTPUT);
+  arduino->PinMode(_pinA2, OUTPUT);
 
-  arduino->pinMode(_enableBPin, OUTPUT);
-  arduino->pinMode(_pinB1, OUTPUT);
-  arduino->pinMode(_pinB2, OUTPUT);
+  arduino->PinMode(_enableBPin, OUTPUT);
+  arduino->PinMode(_pinB1, OUTPUT);
+  arduino->PinMode(_pinB2, OUTPUT);
 }
 
 
@@ -81,8 +82,7 @@ void zee298DualHBridgeMotorDriver::Coast(unsigned int duration = 0)
 }
 
 void zee298DualHBridgeMotorDriver::Brake(unsigned int duration = 0)
-{
-  _arduino->println("zee298DualHBridgeMotorDriver::Brake");
+{  
   MotorABrake();
   MotorBBrake();
   Execute();
@@ -94,13 +94,13 @@ void zee298DualHBridgeMotorDriver::DoExecute()
 
 void zee298DualHBridgeMotorDriver::DoMotor(unsigned int pin, unsigned int direction)
 {
-  _arduino->digitalWrite(pin, direction);
+  _arduino->DigitalWrite(pin, direction);
 }
 
 void zee298DualHBridgeMotorDriver::DoMotor(unsigned int pin1, unsigned int direction1, unsigned pin2, unsigned direction2)
 {
-  _arduino->digitalWrite(pin1, direction1);
-  _arduino->digitalWrite(pin2, direction2);
+  _arduino->DigitalWrite(pin1, direction1);
+  _arduino->DigitalWrite(pin2, direction2);
 }
 
 void zee298DualHBridgeMotorDriver::MotorAOn()

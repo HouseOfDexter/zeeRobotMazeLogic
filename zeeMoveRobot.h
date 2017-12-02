@@ -1,6 +1,7 @@
 #ifndef zeeMoveRobot_h
 #define zeeMoveRobot_h
 
+#include "zeeArduino.h"
 #include "zeeStateLED.h"
 #include "zeeDetection.h"
 #include "zeeExecute.h"
@@ -184,8 +185,8 @@ public:
 protected:
   void DoExecute();
   bool ShouldHandle(zeeDetection detection, bool isFinished, bool handled);
-  void Print(String description, long value, String extension);
-  void Print(String description, bool value, String extension);
+  void Print(const String &description, long value, const String &extension);
+  void Print(const String &description, bool value, const String &extension);
   bool IsHandled() override;
 };
 /************************************************************************************/

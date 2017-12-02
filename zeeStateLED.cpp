@@ -20,14 +20,14 @@ void zeeStateLED::StateOn(unsigned int index)
 {
   AllOff();
   if (index < _numberStates)
-    _arduino->digitalWrite(_ledPins[index], HIGH);
+    _arduino->DigitalWrite(_ledPins[index], HIGH);
 }
 
 void zeeStateLED::AllOff()
 {
   for (int pin = 0; pin < _numberStates; pin++)
   {
-    _arduino->digitalWrite(_ledPins[pin], LOW);    
+    _arduino->DigitalWrite(_ledPins[pin], LOW);    
   }
 }
 

@@ -1,4 +1,5 @@
-#define ArduinoProg
+#line 2 "Algernon.ino"
+#include "Arduino.h"
 #include "zeeArduino.h"
 #include "zeeMotorPins.h"
 #include "zeeHC_SR04.h"
@@ -9,6 +10,8 @@
 #include "zeeMotorPins.h"
 #include "zeeMotors.h"
 #include "zee298DualHBridgeMotorDriver.h"
+#include "zeeDetection.h"
+#include "zeeSonicSensors.h"
 
 //default times in MS
 const unsigned int cDelay = 250;
@@ -38,24 +41,20 @@ void loop()
   zeeLineReader* lineReader = new zeeLineReader(nowait, 0, cLineReaderRPin, cLineReaderMPin, cLineReaderLPin);
   //we don't need to clean up the decorators as they will be cleaned up in the destructor of zeeMoveRobot as one of the chained Robots
   zeeDecoratorLed* ledDecorator = new zeeDecoratorLed(ledarduino, cMoveTime, NULL, leds);
-  zeeDecoratorPrintLn* printDecorator = new zeeDecoratorPrintLn(ledarduino, cMoveTime, ledDecorator);
 
   zee298DualHBridgeMotorDriver* motors = new zee298DualHBridgeMotorDriver(arduino, cMoveTime, zeeHBridgeMDparam(cMotorEnaPinA, cMotorIn1PinA, cMotorIn2PinA), zeeHBridgeMDparam(cMotorEnaPinB, cMotorIn1PinA, cMotorIn2PinB));
   zeeDetector* detector = new zeeDetector(nowait, sonicSensors, lineReader, cDistanceForwardDetection);
-  zeeMoveRobot* moveRobot = zeeMotorFactory::SetMoveRobots(arduino, printDecorator, motors, detector, cMoveTime);
+  zeeMoveRobot* moveRobot = zeeMotorFactory::SetMoveRobots(arduino, ledDecorator, motors, detector, cMoveTime);
   
   zeeRobotMazeLogic* mazeLogic = new zeeRobotMazeLogic(arduino, cMoveTime, moveRobot, detector);
-  
+  long loopcnt = 1;
   //we sit in a loop until we are finished
   //note mazeLogic use the linereader to find the finish line
   while (!mazeLogic->IsFinished())
   {
-    Serial.println("main loop");
-    int loopcnt = 1;
-    Serial.print(loopcnt++);
-    Serial.print("");
+    loopcnt++;
     mazeLogic->Execute();
-    mazeLogic->AfterExecute();
+    mazeLogic->AfterExecute();    
   }
   
   delete leds;

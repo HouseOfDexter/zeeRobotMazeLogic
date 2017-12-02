@@ -5,8 +5,6 @@
 #include "zeeSensorPins.h"
 #include "zeeExecute.h"
 
-const unsigned long cMaxLong = 2147483647;
-
 class zeeHCSR04param 
 {
 public:
@@ -29,8 +27,7 @@ public:
   long GetSingleDistanceMm();
 protected:
   void DoExecute();
-  long GetDistance(unsigned long duration);
-  long GetOffsetDistance(long distance);
+  unsigned long GetDistance(unsigned long duration);
 private:
   zeeArduino* _arduino;
   unsigned int _echoPin;
@@ -39,7 +36,7 @@ private:
   int _measureSampleDelay = cSampleMeasurementDelay; //in ms
   
   unsigned int _offset;
-  long _distance;
+  unsigned long _distance;
 };
 #endif
 

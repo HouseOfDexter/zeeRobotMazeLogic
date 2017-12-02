@@ -1,6 +1,7 @@
 #ifndef zeeDetection_h
 #define zeeDetection_h
 
+#include "zeeArduino.h"
 #include "zeeSonicSensors.h"
 #include "zeeLineReader.h"
 
@@ -31,8 +32,7 @@ class zeeDetector
 public:
   zeeDetector(zeeArduino* arduino, zeeSonicSensors* sonicSensors, zeeLineReader* lineReader, long distanceForwardDetectionMm);
   zeeDetection GetDetection();
-  bool ObstacleForward();
-  void Execute();
+  bool ObstacleForward();  
   zeeArduino* GetArduino() { return _arduino; }
 private:
   zeeArduino* _arduino;

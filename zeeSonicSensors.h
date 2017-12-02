@@ -1,5 +1,7 @@
-#include "zeeExecute.h"
+#ifndef zeeSonicSensors_h
+#define zeeSonicSensors_h
 #include "zeeArduino.h"
+#include "zeeExecute.h"
 #include "zeeHC_SR04.h"
 
 class zeeSSParam
@@ -38,5 +40,5 @@ private:
   long _rightRearDistance = 0;
 
 };
-
+#endif
 

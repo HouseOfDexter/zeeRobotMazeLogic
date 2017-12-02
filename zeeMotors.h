@@ -2,7 +2,7 @@
 #define zeeMotors_h
 
 #include "zeeExecute.h"
-
+#include "zeeArduino.h"
 
 /************************************************************************************/
 /*Abstract class with interface to move the robot*/

@@ -24,8 +24,10 @@ zeeHC_SR04_Sensor::zeeHC_SR04_Sensor(zeeArduino* arduino, unsigned long executeL
   _measureSamples = param.MeasureSamples;
   _measureSampleDelay = param.MeasureSampleDelay;  
   _offset = param.Offset;
-  arduino->PinMode(_triggerPin, OUTPUT);
-  arduino->PinMode(_echoPin, INPUT);
+//  arduino->PinMode(_triggerPin, OUTPUT);
+  pinMode(_triggerPin, OUTPUT);
+  //arduino->PinMode(_echoPin, INPUT);
+  pinMode(_echoPin, INPUT);
 }
 
 zeeHC_SR04_Sensor::~zeeHC_SR04_Sensor()
@@ -37,37 +39,26 @@ long zeeHC_SR04_Sensor::GetDistanceMm()
   long measureSum = 0;
   if (_measureSamples == 0)
     _measureSamples = 1;
-  int samples = 1;
   for (int i = 1; i <= _measureSamples; i++)
   {
     /*We delay taking a reading if not the first reading*/
     if (_measureSamples > 1)
       _arduino->Delay(_measureSampleDelay);
     DoExecute();
-    long tempReading = GetSingleDistanceMm();
-    if (tempReading != cMaxLong)
-    {
-      samples = i;
-      measureSum += GetSingleDistanceMm();
-    }
+    measureSum += GetSingleDistanceMm();
   }
-  return measureSum / samples;
+
+  return measureSum / _measureSamples;
 }
 
 long zeeHC_SR04_Sensor::GetSingleDistanceMm()
 {
-  return _distance;
+  if (IsExecuting())
+    return 0;
+  return _distance + _offset;
 }
 
-long zeeHC_SR04_Sensor::GetOffsetDistance(long distance) 
-{
-  unsigned long diff = cMaxLong;
-  if (!IsExecuting())
-    diff = distance + _offset;
-  return diff;
-}
-
-long zeeHC_SR04_Sensor::GetDistance(unsigned long duration)
+unsigned long zeeHC_SR04_Sensor::GetDistance(unsigned long duration)
 {
   float distance = (duration / cUSo) * 10.0;
   return (unsigned long)distance;
@@ -77,20 +68,20 @@ void zeeHC_SR04_Sensor::DoExecute()
 {
   unsigned long duration = 0;
   //we turn on the UltraSonic_pulse
-
-  //  _arduino->DigitalWrite(_triggerPin, HIGH);
+  
+//  _arduino->DigitalWrite(_triggerPin, HIGH);
   digitalWrite(_triggerPin, HIGH);
   //wait for 11 µs
   //_arduino->DelayMicroseconds(11);
-  delayMicroseconds(11);
+  delayMicroseconds(11);  
   //we turn off the UltraSonic_pulse
-  //  _arduino->DigitalWrite(_triggerPin, LOW);
-  digitalWrite(_triggerPin, LOW);
+//  _arduino->DigitalWrite(_triggerPin, LOW);
+  digitalWrite(_triggerPin, LOW);  
   //we then read the echo of the UltraSonic_pulse...note this is returned in MicroSeconds
-  //  duration = _arduino->PulseIn(_echoPin, HIGH);
-  duration = pulseIn(_echoPin, HIGH);
-   
-  long distance = GetDistance(duration);
-  _distance = GetOffsetDistance(distance);
+//  duration = _arduino->PulseIn(_echoPin, HIGH);
+  duration = pulseIn(_echoPin, HIGH);  
+
+  _distance = GetDistance(duration);  
 }
+
 

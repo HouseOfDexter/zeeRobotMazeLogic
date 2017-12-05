@@ -24,7 +24,7 @@ public:
   void SetEnabled(bool enabled);
   bool GetEnabled();
 private:
-  bool _enabled;
+  bool _enabled = false;
 
 };
 

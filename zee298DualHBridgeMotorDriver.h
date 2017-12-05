@@ -21,6 +21,7 @@ public:
   virtual ~zee298DualHBridgeMotorDriver();
 
   void EnableMotors();
+  void EnableTurMotors();
   void DisableMotors();
 
   void Forward(unsigned int duration = 0);
@@ -30,7 +31,7 @@ public:
   void Coast(unsigned int duration = 0);
   void Brake(unsigned int duration = 0);
 protected:
-  void DoExecute();
+  void DoExecute(bool bypassWait);
   void DoMotor(unsigned int pin, unsigned int direction);
   void DoMotor(unsigned int pin1, unsigned int direction1, unsigned pin2, unsigned direction2);
 

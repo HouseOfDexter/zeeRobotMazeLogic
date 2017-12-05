@@ -2,7 +2,8 @@
 #include "stddef.h"
 #include "zeeMotorPins.h"
 #include "zeeArduino.h"
-//#include "zeeStateLED.h"
+#include "zeeStateLED.h"
+#include "Arduino.h"
 
 /*This is a Abstract State Class, it knows how to do it's one function and only that*/
 
@@ -21,17 +22,31 @@ zeeMoveRobot::~zeeMoveRobot()
     delete _robot;
 }
 
-unsigned int zeeMoveRobot::Handle(zeeDetection detection, bool isFinished, bool handled, unsigned int &robots)
-{ 
+unsigned int zeeMoveRobot::Handle(zeeDetection detection, bool isFinished, bool handled, unsigned int robots)
+{   
+  Serial.print(GetId());
+  Serial.println("-RobotId");
+
   bool shouldHandle = ShouldHandle(detection, isFinished, handled);
+
+  Serial.print(shouldHandle);
+  Serial.println("-shouldHandle");
+
+  Serial.print(detection.GetIsEqual());
+  Serial.println("-isEqual");
+  Serial.print(detection.GetDiffBetweenRightSensors());
+  Serial.println("-Diff");
   if (shouldHandle)
   {
-    Execute();
-    handled = IsHandled();       
-  }
-  robots = CallNextRobot(detection, isFinished, handled, robots);
+    Execute(true);
+    if (GetId() != cStop)
+      digitalWrite(13, LOW);
+    SetIsHandled(true);
+    handled = ReportIsHandled();    
+    robots = robots | GetId();
+  }  
 
-  return robots;
+  return CallNextRobot(detection, isFinished, handled, robots);
 }
 
 unsigned int zeeMoveRobot::GetMoveTime()
@@ -39,23 +54,43 @@ unsigned int zeeMoveRobot::GetMoveTime()
   return _moveTime;
 }
 
+bool zeeMoveRobot::IsHandled()
+{
+  return _isHandled;
+}
+
 zeeMoveRobot * zeeMoveRobot::GetRobot()
 {
   return _robot;
 }
 
-unsigned int zeeMoveRobot::CallNextRobot(zeeDetection detection, bool isFinished, bool handled, unsigned int &robots)
+unsigned int zeeMoveRobot::CallNextRobot(zeeDetection detection, bool isFinished, bool handled, unsigned int robots)
 {
+  unsigned int robotIds = robots;
   //we call our chained robot to see if it needs to handle the request
   zeeMoveRobot* nextRobot = GetRobot();
-  if (nextRobot != NULL)
+  if (nextRobot == NULL) 
+  {
+    zeeMoveRobot* robot = zeeMotorFactory::GetRobot(robots & _defaultBitMask, this);
+    //if (robot != NULL)
+    //  delay(robot->GetMoveTime());
+  }
+  else 
+  {
     robots = nextRobot->Handle(detection, isFinished, handled, robots);
+  }
+    
   return robots;
 }
 
-bool zeeMoveRobot::IsHandled()
+bool zeeMoveRobot::ReportIsHandled()
 {
   return true;
+}
+
+void zeeMoveRobot::SetIsHandled(bool value)
+{
+  _isHandled = value;
 }
 
 /************************************************************************************/
@@ -64,13 +99,14 @@ zeeDecoratorLed::zeeDecoratorLed(zeeArduino* arduino, unsigned long executeLengt
   : zeeMoveRobot(arduino, executeLength, robot, NULL)
 {  
   _leds = leds;
+  _defaultBitMask = c2ndRobotCallMask;
 }
 
 zeeDecoratorLed::~zeeDecoratorLed()
 {
 }
 
-unsigned int zeeDecoratorLed::Handle(zeeDetection detection, bool isFinished, bool handled, unsigned int &robots)
+unsigned int zeeDecoratorLed::Handle(zeeDetection detection, bool isFinished, bool handled, unsigned int robots)
 { 
   if (!isFinished)
   {
@@ -94,7 +130,7 @@ void zeeDecoratorLed::FlashLeds()
 {
   //We flash the LEDS on and off...
   _leds->StateOn(true);
-  _arduino->DelayMicroseconds(500);
+  delay(500);
   _leds->StateOn(false);
 }
 
@@ -108,11 +144,12 @@ bool zeeDecoratorLed::ShouldHandle(zeeDetection detection, bool isFinished, bool
   return true;
 }
 
-void zeeDecoratorLed::DoExecute()
+void zeeDecoratorLed::DoExecute(bool bypassWait)
 {
+  Serial.println("zeeDecoratorLed::DoExecute");
 }
 
-bool zeeDecoratorLed::IsHandled()
+bool zeeDecoratorLed::ReportIsHandled()
 {
   return false;
 }
@@ -121,16 +158,18 @@ bool zeeDecoratorLed::IsHandled()
 
 zeeTurnRight::zeeTurnRight(zeeArduino* arduino, int moveTime, zeeMoveRobot * robot, zeeMotors* motors)
   : zeeMoveRobot(arduino, moveTime, robot, motors)
-{  
+{
+  _defaultBitMask = c2ndRobotCallMask;
 }
 
 zeeTurnRight::~zeeTurnRight()
 {
 }
 
-void zeeTurnRight::DoExecute()
+void zeeTurnRight::DoExecute(bool bypassWait)
 {  
-  _motors->TurnRight();  
+  Serial.println("zeeTurnRight::DoExecute");
+  _motors->TurnRight();    
 }
 
 bool zeeTurnRight::ShouldHandle(zeeDetection detection, bool isFinished, bool handled)
@@ -147,21 +186,22 @@ bool zeeTurnRight::ShouldHandle(zeeDetection detection, bool isFinished, bool ha
 zeeTurnLeft::zeeTurnLeft(zeeArduino* arduino, int moveTime, zeeMoveRobot * robot, zeeMotors* motors)
   : zeeMoveRobot(arduino, moveTime, robot, motors)
 {  
+  _defaultBitMask = c2ndRobotCallMask;
 }
 
 zeeTurnLeft::~zeeTurnLeft()
 {
 }
 
-void zeeTurnLeft::DoExecute()
+void zeeTurnLeft::DoExecute(bool bypassWait)
 {  
-  _motors->TurnLeft();
+  Serial.println("zeeTurnLeft::DoExecute");
+  _motors->TurnLeft();  
 }
 
 bool zeeTurnLeft::ShouldHandle(zeeDetection detection, bool isFinished, bool handled)
 {  
   return (!isFinished &&
-    detection.GetObstacleForward() &&
     !detection.GetIsEqual() &&
     detection.GetDiffBetweenRightSensors() < 0) && 
     _motors->GetEnabled() &&
@@ -173,14 +213,16 @@ bool zeeTurnLeft::ShouldHandle(zeeDetection detection, bool isFinished, bool han
 zeeGoStraight::zeeGoStraight(zeeArduino* arduino, int moveTime, zeeMoveRobot * robot, zeeMotors* motors)
   :zeeMoveRobot(arduino, moveTime, robot, motors)
 {  
+  _defaultBitMask = c2ndRobotCallMask;
 }
 zeeGoStraight::~zeeGoStraight()
 {
 }
 
-void zeeGoStraight::DoExecute()
+void zeeGoStraight::DoExecute(bool bypassWait)
 {   
-  _motors->Forward();
+  Serial.println("straight.DoExecute");
+  _motors->Forward();  
 }
 
 bool zeeGoStraight::ShouldHandle(zeeDetection detection, bool isFinished, bool handled)
@@ -197,14 +239,16 @@ bool zeeGoStraight::ShouldHandle(zeeDetection detection, bool isFinished, bool h
 zeeGoCoast::zeeGoCoast(zeeArduino* arduino, int moveTime, zeeMoveRobot * robot, zeeMotors* motors)
   :zeeMoveRobot(arduino, moveTime, robot, motors)
 {  
+  _defaultBitMask = c1stRobotCallMask;
 }
 
 zeeGoCoast::~zeeGoCoast()
 {
 }
 
-void zeeGoCoast::DoExecute()
+void zeeGoCoast::DoExecute(bool bypassWait)
 { 
+  Serial.println("zeeGoCoast::DoExecute");
   _motors->Coast();
 }
 
@@ -214,7 +258,8 @@ bool zeeGoCoast::ShouldHandle(zeeDetection detection, bool isFinished, bool hand
     detection.GetIsEqual() &&
     !detection.GetObstacleForward()) &&
     _motors->GetEnabled() &&
-    !handled;
+    !handled &&
+    false;//can't figure why we would coast
 }
 
 /************************************************************************************/
@@ -222,15 +267,18 @@ bool zeeGoCoast::ShouldHandle(zeeDetection detection, bool isFinished, bool hand
 zeeStop::zeeStop(zeeArduino * arduino, int moveTime, zeeMoveRobot * robot, zeeMotors * motors)
   :zeeMoveRobot(arduino, moveTime, robot, motors)
 {  
+  _defaultBitMask = c2ndRobotCallMask;
 }
 
 zeeStop::~zeeStop()
 {
 }
 
-void zeeStop::DoExecute()
+void zeeStop::DoExecute(bool bypassWait)
 {
-  _motors->Brake();
+  digitalWrite(13, HIGH);
+  Serial.println("zeeStop::DoExecute");
+  _motors->Brake();  
 }
 
 bool zeeStop::ShouldHandle(zeeDetection detection, bool isFinished, bool handled)
@@ -245,16 +293,18 @@ bool zeeStop::ShouldHandle(zeeDetection detection, bool isFinished, bool handled
 zeeStart::zeeStart(zeeArduino * arduino, int moveTime, zeeMoveRobot * robot, zeeMotors* motors)
   : zeeMoveRobot(arduino, moveTime, robot, motors)
 {  
+  _defaultBitMask = c1stRobotCallMask;
 }
 
 zeeStart::~zeeStart()
 {
 }
 
-void zeeStart::DoExecute()
+void zeeStart::DoExecute(bool bypassWait)
 {  
+  Serial.println("zeeStart::DoExecute");
   _motors->SetEnabled(true);
-  _motors->EnableMotors();
+  _motors->EnableMotors(); 
 }
 
 bool zeeStart::ShouldHandle(zeeDetection detection, bool isFinished, bool handled)
@@ -268,21 +318,25 @@ bool zeeStart::ShouldHandle(zeeDetection detection, bool isFinished, bool handle
 zeeFinished::zeeFinished(zeeArduino * arduino, int moveTime, zeeMoveRobot * robot, zeeMotors* motors)
   : zeeMoveRobot(arduino, moveTime, robot, motors)
 {
+  _defaultBitMask = c2ndRobotCallMask;
 }
 
 zeeFinished::~zeeFinished()
 {
 }
 
-void zeeFinished::DoExecute()
+void zeeFinished::DoExecute(bool bypassWait)
 {  
+  Serial.println("zeeFinished::DoExecute");
   _motors->SetEnabled(false);
   _motors->DisableMotors();
 }
 
 bool zeeFinished::ShouldHandle(zeeDetection detection, bool isFinished, bool handled)
 {
-  return isFinished;
+  return  false;
+    //temp
+    //detection.GetDetectLine();
 }
 
 /************************************************************************************/
@@ -290,15 +344,17 @@ bool zeeFinished::ShouldHandle(zeeDetection detection, bool isFinished, bool han
 zeeSmallTurnLeft::zeeSmallTurnLeft(zeeArduino * arduino, int moveTime, zeeMoveRobot * robot, zeeMotors* motors)
   : zeeMoveRobot(arduino, moveTime, robot, motors)
 {  
+  _defaultBitMask = c1stRobotCallMask;
 }
 
 zeeSmallTurnLeft::~zeeSmallTurnLeft()
 {
 }
 
-void zeeSmallTurnLeft::DoExecute()
+void zeeSmallTurnLeft::DoExecute(bool bypassWait)
 { 
-  _motors->TurnLeft();
+  Serial.println("zeeSmallTurnLeft::DoExecute");
+  _motors->TurnLeft();  
 }
 
 bool zeeSmallTurnLeft::ShouldHandle(zeeDetection detection, bool isFinished, bool handled)
@@ -314,15 +370,17 @@ bool zeeSmallTurnLeft::ShouldHandle(zeeDetection detection, bool isFinished, boo
 zeeSmallTurnRight::zeeSmallTurnRight(zeeArduino * arduino, int moveTime, zeeMoveRobot * robot, zeeMotors* motors)
   : zeeMoveRobot(arduino, moveTime, robot, motors)
 {  
+  _defaultBitMask = c1stRobotCallMask;
 }
 
 zeeSmallTurnRight::~zeeSmallTurnRight()
 {
 }
 
-void zeeSmallTurnRight::DoExecute()
+void zeeSmallTurnRight::DoExecute(bool bypassWait)
 {  
-  _motors->TurnRight();  
+  Serial.println("zeeSmallTurnRight::DoExecute");
+  _motors->TurnRight(); 
 }
 
 bool zeeSmallTurnRight::ShouldHandle(zeeDetection detection, bool isFinished, bool handled)
@@ -392,104 +450,84 @@ bool zeeSmallTurnRight::ShouldHandle(zeeDetection detection, bool isFinished, bo
 
 /************************************************************************************/
 
-zeeDetectorRobot::zeeDetectorRobot(zeeArduino * arduino, int moveTime, zeeMoveRobot * robot, zeeDetector * detector)
+zeeDetectorRobot::zeeDetectorRobot(zeeArduino * arduino, int moveTime, zeeMoveRobot * robot, zeeDetector* detector, unsigned int bitMask)
   : zeeMoveRobot(arduino, moveTime, robot, NULL)
 {
   _detector = detector;
+  _defaultBitMask = c1stRobotCallMask;
 }
 
 zeeDetectorRobot::~zeeDetectorRobot()
 {
 }
 
-unsigned int zeeDetectorRobot::Handle(zeeDetection detection, bool isFinished, bool handled, unsigned int &robots)
+unsigned int zeeDetectorRobot::Handle(const zeeDetection detection, bool isFinished, bool handled, unsigned int robots)
 { 
-  detection = _detector->GetDetection();
+  zeeMoveRobot* robot = zeeMotorFactory::GetRobot(robots & _bitMask, this);
+//  if (robot != NULL)
+//    delay(robot->GetMoveTime());
+  _detector->GetDetection();
+  zeeDetection newdetection = zeeDetection(_detector->DetectLine(), _detector->ObstacleForward(), _detector->IsEqual(), _detector->DiffBetweenRightSensors());
   robots = robots | GetId();
-  robots = CallNextRobot(detection, detection.GetDetectLine(), false, robots);
-  return false;
+  
+  return CallNextRobot(newdetection, newdetection.GetDetectLine(), false, robots);
 }
 
-bool zeeDetectorRobot::ShouldHandle(zeeDetection detection, bool isFinished, bool handled)
+bool zeeDetectorRobot::ShouldHandle(const zeeDetection detection, bool isFinished, bool handled)
 {
-  return false;
+  return true;
 }
 
-void zeeDetectorRobot::DoExecute()
+void zeeDetectorRobot::DoExecute(bool bypassWait)
 {  
+  Serial.println("zeeDetectorRobot::DoExecute");
 }
 
-bool zeeDetectorRobot::IsHandled()
+bool zeeDetectorRobot::ReportIsHandled()
 {
   return false;
 }
 
 /************************************************************************************/
-zeeMoveRobot * zeeMotorFactory::SetMoveRobots(zeeArduino * arduino, zeeMoveRobot * zeeMoveRobot, zeeMotors * motors, zeeDetector* detector, int moveTime)
+zeeMoveRobot * zeeMotorFactory::SetMoveRobots(zeeArduino * arduino, zeeArduino * nowait, zeeMoveRobot * moveRobot, zeeMotors * motors, zeeDetector* detector, int moveTime)
 {
-  //zeeDecoratorTestLed *ledDecorator = new zeeDecoratorTestLed(moveTime, NULL, onOffLed);
-
-  zeeFinished* finished = new zeeFinished(arduino, moveTime, zeeMoveRobot, motors);
-  zeeStop* stop = new zeeStop(arduino, cBreakTime, finished, motors);  
+  zeeFinished* finished = new zeeFinished(nowait, 0, moveRobot, motors);  
+  zeeGoStraight* straight = new zeeGoStraight(arduino, moveTime, finished, motors);
+  zeeStop* stop = new zeeStop(arduino, cBreakTime - cSmallTurnTime, straight, motors);
   zeeTurnLeft* turnLeft = new zeeTurnLeft(arduino, moveTime - cSmallTurnTime, stop, motors);
   zeeTurnRight* turnRight = new zeeTurnRight(arduino, moveTime - cSmallTurnTime, turnLeft, motors);
-  zeeGoStraight* straight = new zeeGoStraight(arduino, moveTime, turnRight, motors);
-  zeeDetectorRobot* detectorRobot = new zeeDetectorRobot(detector->GetArduino(), 0, straight, detector);
-  zeeSmallTurnLeft* smallTurnLeft = new zeeSmallTurnLeft(arduino, cSmallTurnTime, detectorRobot, motors);
-  zeeSmallTurnRight* smallTurnRight = new zeeSmallTurnRight(arduino, cSmallTurnTime, smallTurnLeft, motors);
-  zeeGoCoast* coast = new zeeGoCoast(arduino, cSmallTurnTime, smallTurnRight, motors);
 
-  zeeStart* start = new zeeStart(arduino, cSmallTurnTime, coast, motors);
+  //the detector allows us to get a new detection in the middle of our chain
+  
+//  zeeDetectorRobot* smallDetectorRobot = new zeeDetectorRobot(nowait, 0, straight, detector, c1stRobotCallMask);
+//  zeeSmallTurnLeft* smallTurnLeft = new zeeSmallTurnLeft(arduino, cSmallTurnTime, smallDetectorRobot, motors);
+//  zeeSmallTurnRight* smallTurnRight = new zeeSmallTurnRight(arduino, cSmallTurnTime, smallTurnLeft, motors);
+//  zeeGoCoast* coast = new zeeGoCoast(arduino, cSmallTurnTime, smallTurnRight, motors);
+//  zeeStart* start = new zeeStart(nowait, 0, coast, motors);  
+  
   /*we return the last moverobot in our chain...as this will need to be freed(delete).  This will cause
   a cascade of deletes through the destructor.  If you add to this chain, make sure the last in the chain is
   returned and then delete called when it needs to be cleaned up.
   */  
-  return start;
+  return turnRight;
 }
 
-/*
-const int cTurnRight = 1;
-const int cTurnLeft = 2;
-const int cSmallTurnRight = 4;
-const int cSmallTurnLeft = 8;
-const int cGoStraight = 16;
-const int cGoCoast = 32;
-const int cStop = 64;
-const int cStart = 128;
-const int cFinished = 256;
-const int cDecoratorLed = 512;
-const int cDecoratorPrintLn = 1024;
-const int cDetectorRobot = 2048;
-*/
-String zeeMotorFactory::GetRobotString(unsigned int id)
+zeeMoveRobot * zeeMotorFactory::GetRobot(unsigned int id, zeeMoveRobot* robot)
 {
-  String robots = " ";
-
-  if (id & cTurnRight == cTurnRight)
-    robots = robots + "Turn Right ";
-  if (id & cTurnLeft == cTurnLeft)
-    robots = robots + "Turn Left ";
-  if (id & cSmallTurnRight == cSmallTurnRight)
-    robots = robots + "Small Turn Right ";
-  if (id & cSmallTurnLeft == cSmallTurnLeft)
-    robots = robots + "Small Turn Left ";
-
-  if (id & cGoStraight == cGoStraight)
-    robots = robots + "Go Straight ";
-  if (id & cGoCoast == cGoCoast)
-    robots = robots + "Go Coast ";
-  if (id & cStop == cStop)
-    robots = robots + "Stop ";
-  if (id & cStart == cStart)
-    robots = robots + "Start ";
-  if (id & cFinished == cFinished)
-    robots = robots + "Finished ";
-  if (id & cDecoratorLed == cDecoratorLed)
-    robots = robots + "Decorator Led ";
-  if (id & cDecoratorPrintLn == cDecoratorPrintLn)
-    robots = robots + "Decorator Print Ln ";
-  if (id & cDetectorRobot == cDetectorRobot)
-    robots = robots + "Detector Robot ";
-  return robots;
+  //note GetRobot will return the first Robot that has an id(id can be multiple robots with flags flipped)
+  if (robot == NULL || robot->GetId() & id == id)
+  {
+    Serial.print(id);
+    Serial.println(" found Robot");
+    return robot;
+  }
+  else
+  {
+    //recursive call to find the robot in the chain
+    robot = zeeMotorFactory::GetRobot(id, robot->GetRobot());
+  }  
 }
+
+
+
 

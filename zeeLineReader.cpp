@@ -1,15 +1,16 @@
 #include "zeeLineReader.h"
+#include "Arduino.h"
 
-
-zeeLineReader::zeeLineReader(zeeArduino * arduino, unsigned long executeLength, unsigned int rPin, unsigned int mPin, unsigned int lPin)
+zeeLineReader::zeeLineReader(zeeArduino * arduino, unsigned long executeLength, unsigned int lPin, unsigned int mPin, unsigned int rPin)
   :zeeExecute(arduino, executeLength)
 {
   _rPin = rPin;
   _mPin = mPin;
   _lPin = lPin;
-  arduino->PinMode(rPin, INPUT);
-  arduino->PinMode(mPin, INPUT);
-  arduino->PinMode(lPin, INPUT);
+
+//  pinMode(rPin, INPUT);
+//  pinMode(mPin, INPUT);
+//  pinMode(lPin, INPUT);
 }
 
 zeeLineReader::~zeeLineReader()
@@ -18,20 +19,23 @@ zeeLineReader::~zeeLineReader()
 
 bool zeeLineReader::DetectRight()
 {
-  return _arduino->DigitalRead(_rPin);
+  return _detectRight;
 }
 
 bool zeeLineReader::DetectLeft()
 {
-  return _arduino->DigitalRead(_lPin);
+  return _detectLeft;
 }
 
 bool zeeLineReader::DetectMiddle()
 {
-  return _arduino->DigitalRead(_mPin);
+  return _detectMiddle;
 }
 
-void zeeLineReader::DoExecute()
+void zeeLineReader::DoExecute(bool bypassWait)
 {
+//  _detectRight = !digitalRead(_rPin);
+//  _detectLeft = !digitalRead(_lPin);
+//  _detectMiddle = !digitalRead(_mPin);
 }
 

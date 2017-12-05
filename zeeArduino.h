@@ -38,8 +38,8 @@ public:
   void Print(bool value);
 
 private:
-  unsigned int _updateInterval;
-  unsigned int _intervalRunTime;
+  unsigned int _updateInterval = 0;
+  unsigned int _intervalRunTime = 0;
 };
 
 #endif

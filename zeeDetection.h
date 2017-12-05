@@ -15,15 +15,15 @@ public:
   ~zeeDetection();
 
   bool GetDetectLine() { return _lineDetected; };
-  bool GetObstacleForward() { return _obstacleForward; }
+  bool GetObstacleForward() { return _obstacleForward; };
   bool GetIsEqual() { return _isEqual; }
   long GetDiffBetweenRightSensors() { return _diffBetweenRightSensors; }
 
 private:
-  bool _lineDetected;
-  bool _obstacleForward;
-  bool _isEqual;
-  long _diffBetweenRightSensors;
+  bool _lineDetected = false;
+  bool _obstacleForward = false;
+  bool _isEqual = false;
+  long _diffBetweenRightSensors = 0;
 };
 
 /************************************************************************************/
@@ -31,14 +31,18 @@ class zeeDetector
 {
 public:
   zeeDetector(zeeArduino* arduino, zeeSonicSensors* sonicSensors, zeeLineReader* lineReader, long distanceForwardDetectionMm);
-  zeeDetection GetDetection();
-  bool ObstacleForward();  
+  virtual void GetDetection(bool bypassWait = true);
+  bool ObstacleForward(); 
+  bool DetectLine();  
+  bool IsEqual();
+  long DiffBetweenRightSensors();
+
   zeeArduino* GetArduino() { return _arduino; }
 private:
   zeeArduino* _arduino;
   zeeSonicSensors* _sonicSensors;  
   zeeLineReader* _lineReader;
-  long _distanceForwardDetectionMm;
+  long _distanceForwardDetectionMm = 0;
 };
 #endif
 

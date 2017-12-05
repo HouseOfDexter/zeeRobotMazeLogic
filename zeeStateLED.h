@@ -10,7 +10,7 @@ public:
   void AllOff();
 private:
   zeeArduino* _arduino;
-  unsigned int _numberStates;
+  unsigned int _numberStates = 0;
   unsigned int _ledPins[];
 };
 #endif

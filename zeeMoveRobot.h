@@ -7,18 +7,34 @@
 #include "zeeExecute.h"
 #include "zeeMotors.h"
 
-const int cTurnRight = 1;
-const int cTurnLeft = 2;
+/*These constants are bit flags
+ To add flags, you Or against a running total i.e. robots = robots | GetId();
+ which flips the flag for the id in the running total robots.
+ 
+ To find flags that match, you AND running Total against a Bit Mask i.e. robots && c2ndRobotCallMask
+ which will only return flags greater than or equal to 32
+*/
+const int cStart = 1;
+const int cGoCoast = 2;
 const int cSmallTurnRight = 4;
 const int cSmallTurnLeft = 8;
-const int cGoStraight = 16;
-const int cGoCoast = 32;
-const int cStop = 64;
-const int cStart = 128;
-const int cFinished = 256;
-const int cDecoratorLed = 512;
-const int cDecoratorPrintLn = 1024;
-const int cDetectorRobot = 2048;
+const int cDetectorRobot = 16;
+
+//this bit mask is 1 + 2 + 4 +8 + 16
+const int c1stRobotCallMask = 31;
+
+const int cTurnRight = 32;
+const int cTurnLeft = 64;
+const int cGoStraight = 128;
+const int cStop = 256;
+const int cFinished = 512;
+const int cDecoratorLed = 1024;
+const int cDecoratorPrintLn = 2048;
+//if you need to add more MoveRobots like decorators just double the last cMoveRobot and add it to the bitMask
+
+
+//this bit flag is 32 + 64 + 128 + 256 + 512 + 1024 + 2048
+const int c2ndRobotCallMask = 4064;
 
 class zeeMoveRobot : public zeeExecute
 {
@@ -27,19 +43,24 @@ public:
   zeeMoveRobot(zeeArduino* arduino, unsigned int moveTime, zeeMoveRobot* robot, zeeMotors* motors);
   virtual ~zeeMoveRobot();
 
-  virtual unsigned int Handle(zeeDetection detection, bool isFinished, bool handled, unsigned int &robots);
+  virtual unsigned int Handle(const zeeDetection detection, bool isFinished, bool handled, unsigned int robots);
   unsigned int GetMoveTime();
   virtual unsigned int GetId() = 0;
+  bool IsHandled();
+  zeeMoveRobot* GetRobot();
 protected:
   //abstract method that will be implemented by State Class
-  virtual bool ShouldHandle(zeeDetection detection, bool isFinished, bool handled) = 0;
-  zeeMoveRobot* GetRobot();
-  unsigned int CallNextRobot(zeeDetection detection, bool isFinished, bool handled, unsigned int &robots);
-  virtual bool IsHandled();
+  virtual bool ShouldHandle(const zeeDetection detection, bool isFinished, bool handled) = 0;  
+  unsigned int CallNextRobot(const zeeDetection detection, bool isFinished, bool handled, unsigned int robots);
+  virtual bool ReportIsHandled();
+  
   zeeMotors* _motors;
+  unsigned int _defaultBitMask = 0;
 private:
+  void SetIsHandled(bool value);
   unsigned int _moveTime = defaultMoveTime;
   zeeMoveRobot* _robot;  
+  bool _isHandled = false;
 };
 
 /************************************************************************************/
@@ -50,8 +71,8 @@ public:
   virtual ~zeeTurnRight();
   unsigned int GetId() { return cTurnRight; }
 protected:
-  void DoExecute();
-  bool ShouldHandle(zeeDetection detection, bool isFinished, bool handled);
+  void DoExecute(bool bypassWait) override;
+  bool ShouldHandle(zeeDetection detection, bool isFinished, bool handled) override;
 };
 
 /************************************************************************************/
@@ -63,8 +84,8 @@ public:
   virtual ~zeeTurnLeft();
   unsigned int GetId() { return cTurnLeft; }
 protected:
-  void DoExecute();
-  bool ShouldHandle(zeeDetection detection, bool isFinished, bool handled);
+  void DoExecute(bool bypassWait) override;
+  bool ShouldHandle(zeeDetection detection, bool isFinished, bool handled) override;
 };
 
 /************************************************************************************/
@@ -75,8 +96,8 @@ public:
   virtual ~zeeSmallTurnLeft();
   unsigned int GetId() { return cSmallTurnLeft; }
 protected:
-  void DoExecute();
-  bool ShouldHandle(zeeDetection detection, bool isFinished, bool handled);
+  void DoExecute(bool bypassWait) override;
+  bool ShouldHandle(zeeDetection detection, bool isFinished, bool handled) override;
 };
 
 /************************************************************************************/
@@ -87,8 +108,8 @@ public:
   virtual ~zeeSmallTurnRight();
   unsigned int GetId() { return cSmallTurnRight; }
 protected:
-  void DoExecute();
-  bool ShouldHandle(zeeDetection detection, bool isFinished, bool handled);
+  void DoExecute(bool bypassWait) override;
+  bool ShouldHandle(zeeDetection detection, bool isFinished, bool handled) override;
 };
 
 /************************************************************************************/
@@ -99,8 +120,8 @@ public:
   virtual ~zeeGoStraight();
   unsigned int GetId() { return cGoStraight; }
 protected:
-  void DoExecute();
-  bool ShouldHandle(zeeDetection detection, bool isFinished, bool handled);
+  void DoExecute(bool bypassWait) override;
+  bool ShouldHandle(zeeDetection detection, bool isFinished, bool handled) override;
 };
 /************************************************************************************/
 
@@ -111,8 +132,8 @@ public:
   virtual ~zeeGoCoast();
   unsigned int GetId() { return cGoCoast; }
 protected:
-  void DoExecute();
-  bool ShouldHandle(zeeDetection detection, bool isFinished, bool handled);
+  void DoExecute(bool bypassWait) override;
+  bool ShouldHandle(zeeDetection detection, bool isFinished, bool handled) override;
 };
 /************************************************************************************/
 
@@ -124,8 +145,8 @@ public:
   virtual ~zeeStop();
   unsigned int GetId() { return cStop; }
 protected:
-  void DoExecute();
-  bool ShouldHandle(zeeDetection detection, bool isFinished, bool handled);
+  void DoExecute(bool bypassWait);
+  bool ShouldHandle(zeeDetection detection, bool isFinished, bool handled) override;
 };
 
 /************************************************************************************/
@@ -136,8 +157,8 @@ public:
   virtual ~zeeStart();
   unsigned int GetId() { return cStart; }
 protected:
-  void DoExecute();
-  bool ShouldHandle(zeeDetection detection, bool isFinished, bool handled);
+  void DoExecute(bool bypassWait) override;
+  bool ShouldHandle(zeeDetection detection, bool isFinished, bool handled) override;
 };
 
 /************************************************************************************/
@@ -148,8 +169,8 @@ public:
   virtual ~zeeFinished();
   unsigned int GetId() { return cFinished; }
 protected:
-  void DoExecute();
-  bool ShouldHandle(zeeDetection detection, bool isFinished, bool handled);
+  void DoExecute(bool bypassWait) override;
+  bool ShouldHandle(zeeDetection detection, bool isFinished, bool handled) override;
 };
 
 /************************************************************************************/
@@ -162,12 +183,12 @@ class zeeDecoratorLed : public zeeMoveRobot
 public:
   zeeDecoratorLed(zeeArduino* arduino, unsigned long executeLength, zeeMoveRobot* robot, zeeStateLED* _leds);
   virtual ~zeeDecoratorLed();
-  unsigned int Handle(zeeDetection detection, bool isFinished, bool handled, unsigned int &robots) override;
+  unsigned int Handle(zeeDetection detection, bool isFinished, bool handled, unsigned int robots) override;
   unsigned int GetId() { return cDecoratorLed; }
 protected:
-  bool ShouldHandle(zeeDetection detection, bool isFinished, bool handled);
-  void DoExecute();
-  bool IsHandled() override;
+  bool ShouldHandle(zeeDetection detection, bool isFinished, bool handled) override;
+  void DoExecute(bool bypassWait) override;
+  bool ReportIsHandled() override;
 private:  
   zeeStateLED* _leds;
   void FlashLeds();
@@ -195,23 +216,24 @@ private:
 class zeeDetectorRobot : public zeeMoveRobot 
 {
 public:
-  zeeDetectorRobot(zeeArduino* arduino, int moveTime, zeeMoveRobot* robot, zeeDetector* detector);
+  zeeDetectorRobot(zeeArduino* arduino, int moveTime, zeeMoveRobot* robot, zeeDetector* detector, unsigned int bitMask);
   virtual ~zeeDetectorRobot();
-  unsigned int Handle(zeeDetection detection, bool isFinished, bool handled, unsigned int &robots) override;
+  unsigned int Handle(zeeDetection detection, bool isFinished, bool handled, unsigned int robots) override;
   unsigned int GetId() { return cDetectorRobot; }
 protected:
-  bool ShouldHandle(zeeDetection detection, bool isFinished, bool handled);
-  void DoExecute();
-  bool IsHandled() override;
+  bool ShouldHandle(zeeDetection detection, bool isFinished, bool handled) override;
+  void DoExecute(bool bypassWait) override;
+  bool ReportIsHandled() override;
 private:
   zeeDetector* _detector;
+  unsigned int _bitMask = 0;
 };
 /************************************************************************************/
 class zeeMotorFactory
 {
 public:
-  static zeeMoveRobot* SetMoveRobots(zeeArduino* arduino, zeeMoveRobot* zeeMoveRobot, zeeMotors* motors, zeeDetector* detector, int moveTime);
-  static String GetRobotString(unsigned int id);
+  static zeeMoveRobot* SetMoveRobots(zeeArduino* arduino, zeeArduino * nowait, zeeMoveRobot* moveRobot, zeeMotors* motors, zeeDetector* detector, int moveTime);
+  static zeeMoveRobot* GetRobot(unsigned int id, zeeMoveRobot* robot);
 };
 #endif
 

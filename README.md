@@ -16,8 +16,6 @@ We upgraded the motherboard from Elegoo Uno 3(Arduino Uno clone), to Elegoo AT25
 
 AFTERMATH:
 
-We weren't able to get the Robot through the maze.  The problem was a timing issue, with 3 UltraSonic sensors, we had a delay of about 1000 ms with 3 sensors going.  Unfortunately the Arduino boards do not have an OS or multiple cores, this causes everything to be on a single thread.  Coded around everything but the sensors inherent delay in reading the Ultra Sonic pulse. The robot was also slowed down, but then the robot had a torque problem with the DC motors.  If done again, would definately not use the HC SR04 Ultra Sensors.  There's just to much of a delay in the sensors to use for navigation.  They make fine sensors for obstical avoidance.  A Laser Range Finder would be used if done again.
-
-
+We weren't able to get the Robot through the maze.  The problem was a timing issue, with 3 UltraSonic sensors, we had a delay of about 1000 ms with 3 sensors going.  Unfortunately the Arduino boards do not have an OS or multiple cores, this causes everything to be on a single thread.  Coded around everything but the sensors inherent delay in reading the Ultra Sonic pulse. The robot was also slowed down, but then the robot had a torque problem with the DC motors.  If done again, would definately not use the HC SR04 Ultra Sensors.  There's just to much of a delay in the sensors to use for navigation.  They make fine sensors for obstical avoidance.  We will use Piano Wire to feel where the walls are.  When the wire touches the wall it will cause the wire to bend and close a circuit, letting us know if we are next to a wall or opening.
 
 
